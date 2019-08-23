@@ -13,9 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 
+# When goto api/ request is passed to django app
+# Which then lookup url pattern that first matches
+# Then it pass all matches api urls to sub-urls in api
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/',include('piracy_prevention_api.urls'))
 ]
