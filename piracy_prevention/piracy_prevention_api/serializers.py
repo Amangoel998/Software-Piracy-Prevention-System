@@ -27,9 +27,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         # Dictionary with keys for custom configuration
         extra_kwargs = {
             'password': {
-                'write_only' : True
+                'write_only' : True ,
                 # To hide it when we enter it
-                # 'style': {'input_type' : 'password' }
+                'style': {'input_type' : 'password' }
             }
         }
 

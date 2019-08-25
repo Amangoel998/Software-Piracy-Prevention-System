@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 
 from piracy_prevention_api import serializers, models, permissions
@@ -138,3 +139,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     # This sets how user will get permissions for certain things
     permission_classes = (permissions.UpdateOwnProfile,)
+
+    # Add filters to search profiles based on name or email
+    filter_backends = (filters.SearchFilter,)
+
+    # Class variable search_fields tells filter_backends
+    # Which fields will be searchable by filter
+    search_fields = ('name', 'email',)
+    

@@ -14,4 +14,4 @@ class UpdateOwnProfile(permissions.BasePermission):
             return True
         
         # Now we check if user updating profile matches their own
-        return obj.method == request.user.id
+        return obj.id == request.user.id
