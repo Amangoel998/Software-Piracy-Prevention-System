@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 
-from piracy_prevention_api import serializers
+from piracy_prevention_api import serializers, models, permissions
+
 
 # Any Request Made to View is assigned to this
 class FirstApiView(APIView):
@@ -120,3 +122,19 @@ class FirstViewSet(viewsets.ViewSet):
         """Handle Deletng an object with pk"""
         return Response({'http-method':'DELETE'})
 
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and managing user profiles"""
+
+    # Like regular connect it to serializer class
+    # Then provide query set to model viewset
+    # So it knows which objects will be managed through this viewset
+
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    
+    # Set UserProfileViewSet to use correct Auth and Permission classes
+    # Can Configure to use one or more Auth types in a viewset auth class tuple
+    authentication_classes = (TokenAuthentication,)
+
+    # This sets how user will get permissions for certain things
+    permission_classes = (permissions.UpdateOwnProfile,)

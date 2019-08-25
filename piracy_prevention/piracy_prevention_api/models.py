@@ -58,7 +58,6 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     # Model Manager to use custom model for Django CLI
     # It create and control User using Django CLI
     # Must be objects only
-
     objects = UserProfileManager()
 
     # Replace Userfield and other for custom manager
