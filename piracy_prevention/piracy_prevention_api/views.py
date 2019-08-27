@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 
 from piracy_prevention_api import serializers, models, permissions
 
@@ -129,7 +131,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     # Like regular connect it to serializer class
     # Then provide query set to model viewset
     # So it knows which objects will be managed through this viewset
-
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
     
@@ -147,3 +148,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     # Which fields will be searchable by filter
     search_fields = ('name', 'email',)
     
+class UserLoginApiView(ObtainAuthToken):
+    """Handle creating Auth creation Tokens"""
+    # This by default doesn't allow itself to be viewed in browsable djando Admin
+    # Hence we will override this class
+    # Get default rendered class from API settings
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

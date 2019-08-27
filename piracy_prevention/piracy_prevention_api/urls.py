@@ -19,7 +19,7 @@ router.register('profiles', views.UserProfileViewSet)
 # Then it pass all matches api urls to sub-urls in api
 urlpatterns = [
     url(r'^first-apiview/',views.FirstApiView.as_view()),
-
+    url(r'^login/',views.UserLoginApiView.as_view()),
     # 'Blank' Coz we dont want to add prefix instead all urls in base of this url
     # This also create additional API Root directory page
     url(r'^', include(router.urls))
