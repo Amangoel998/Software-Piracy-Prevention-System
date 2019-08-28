@@ -14,6 +14,8 @@ router.register('first-viewset', views.FirstViewSet, base_name = 'first-viewset'
 # Django figure out the name itself
 router.register('profiles', views.UserProfileViewSet)
 
+router.register('feed/',views.UserProfileFeedApiViewSet)
+
 # When goto api/ request is passed to django app
 # Which then lookup url pattern that first matches
 # Then it pass all matches api urls to sub-urls in api

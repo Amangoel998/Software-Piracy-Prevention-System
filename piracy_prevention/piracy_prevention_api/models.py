@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser #\for custom user model
 from django.contrib.auth.models import PermissionsMixin #/
 from django.contrib.auth.models import BaseUserManager  # for custom model manager
+from django.conf import settings
 
 # Classes should be separted by 2 linespace from up and bellow
 class UserProfileManager(BaseUserManager):
@@ -76,3 +77,22 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
         """Retrieve String Representation"""
         return self.email
     
+class ProfileFeedItem(models.Model):
+    """Profile Status Update"""
+    # Add user profile field as foreign key for profile item
+    user_profile = models.ForeignKey(
+        # Can reference name of UserProfile class as string but we have to manually update all keys
+        # When referencing auth user model, it's best to retrive from setting.py
+        settings.AUTH_USER_MODEL,
+        # On delete argument tells what to do if remote field is deleted
+        # So it cascade changes in related fields ie remove feed if user is removed
+        # Other option is to set it None and set feed item as None
+        on_delete = models.CASCADE,
+    )
+    # Status text contain feed update
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        """Return model as String"""
+        return self.status_text

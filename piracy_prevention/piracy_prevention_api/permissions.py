@@ -15,3 +15,13 @@ class UpdateOwnProfile(permissions.BasePermission):
         
         # Now we check if user updating profile matches their own
         return obj.id == request.user.id
+
+
+class UpdateOwnFeed(permissions.BasePermission):
+    """Allow user only to update its own feed"""
+    def has_object_permission(self, request, view, obj):
+        """Check if user is updating its own feed"""
+        if request.method == permissions.SAFE_METHODS:
+            return True
+        
+        return obj.user_profile.id == request.user.id

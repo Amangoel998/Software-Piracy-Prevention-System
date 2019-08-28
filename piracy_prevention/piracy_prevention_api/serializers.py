@@ -48,3 +48,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
             password = validated_data['password']
         )
         return user
+
+
+class ProfileFeedSerializer(serializers.ModelSerializer):
+    """Serializes Profile Feed"""
+
+    # Set this serializer to Profile Feed class
+    class Meta:
+        model = models.ProfileFeedItem
+        # id is setup by default in Django
+        fields = ('id', 'user_profile', 'status_text', 'created_on')
+
+        # Now to restrict that if a user creates profile feed and assign to other user
+        # We set user_profile to autheticated user to read only
+        extra_kwargs = {'user_profile':{'read_only':True}}
