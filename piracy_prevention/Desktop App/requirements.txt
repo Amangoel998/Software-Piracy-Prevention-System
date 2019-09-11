@@ -1,0 +1,4 @@
+# NOTE: PyQt5 must be install separately.
+# On Debian, this is possible via
+# `sudo apt install python-qt5`
+# `sudo apt install python-qt5-dev`
