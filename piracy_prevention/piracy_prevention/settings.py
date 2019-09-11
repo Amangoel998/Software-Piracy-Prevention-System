@@ -23,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'fa-*k)mfpm1as)-la0l-#$@-e*1*6z489&36awx*&qj+1--gr!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG',1)))
 
 ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['<copied-public-dns-of-machine>', '127.0.0.1']
 
 # Application definition
 
@@ -123,3 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'piracy_prevention_api.UserProfile'
+
+STATIC_ROOT = 'static/'
