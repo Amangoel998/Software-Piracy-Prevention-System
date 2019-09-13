@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+*{
+	margin: 0;
+	padding: 0;
+	outline: none;
+	box-sizing: border-box;
+}
+
+body{
+	background: url('bg.jpg') no-repeat top center;
+	background-size: cover;
+	width: 100%;
+	height: 100vh;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+}
+
+.wrapper{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.contact-form{
+	width: 100%;
+	max-width: 500px;
+	height: auto;
+	background: rgba(0,0,0,0.7);
+	padding: 40px 50px;
+	border-radius: 5px;
+}
+
+.title{
+	font-size: 2em;
+	line-height: 1.25em;
+	text-align: center;
+	text-transform: uppercase;
+	font-weight: 900;
+	letter-spacing: 2px;
+	color: #ffc107;
+	padding-bottom: 15px;
+}
+
+.input-fields {
+    padding: 0 30px;
+}
+
+.input-fields .items{
+	width: 100%;
+	padding-bottom: 15px;
+} 
+
+.input-fields .items .label{
+	display: block;
+    font-size: 1em;
+    color: #ffecb3;
+    text-transform: capitalize;
+    transition: all 0.5s ease;
+    padding-bottom: 5px;
+}
+
+.input-fields .items .input,
+.input-fields .items .text-area{
+	background: transparent;
+    border: 0;
+    border: 1px solid #ffecb3;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1em;
+    color: #ffecb3;
+    border-radius: 3px;
+}
+
+.btn{
+	margin: 0 30px;
+	background: #ffc107;
+	color: #ffecb3;
+	font-size: 1.25em;	
+	padding: 10px 0;
+	text-align: center;
+	text-transform: uppercase;
+	border-radius: 5px;
+	cursor: pointer;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+
+
+.items #msg{
+	height: 100px;
+}
+
+
+/* jquery code */
+.input-fields .items .input.active .label{
+	font-size: 15px;
+	top: 0;
+}
+
+@media screen and (max-width: 750px){
+	.input-fields {
+	    padding: 0;
+	}
+}
