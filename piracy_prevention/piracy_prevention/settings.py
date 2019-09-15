@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'piracy_prevention_api',
+    'website',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'piracy_prevention.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['website/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +72,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'piracy_prevention.wsgi.application'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "website/static"),
+]
 
 
 # Database
@@ -124,4 +129,4 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'piracy_prevention_api.UserProfile'
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = '/static'

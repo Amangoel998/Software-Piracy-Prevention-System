@@ -21,5 +21,6 @@ from django.contrib import admin
 # Then it pass all matches api urls to sub-urls in api
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/',include('piracy_prevention_api.urls'))
+    url(r'^api/',include('piracy_prevention_api.urls')),
+    url(r'^', include('website.urls')),
 ]
