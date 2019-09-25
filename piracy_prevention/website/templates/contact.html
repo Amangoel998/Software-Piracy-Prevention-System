@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+	<div class="signup">
+	<form id = "contact_form" >
+		<h2>Contact Us</h2>   
+		<input type="text" placeholder="Email address"><br><br>  
+		<textarea placeholder="Type your message here"></textarea>
+		<input type="submit" value="Send"  onclick="myFunction()"><br><br>
+			<div id="msg" style="display:none">You have successfully submitted!!</div>
+		<script>
+			function form_reset(){
+				document.getElementById("contact_form").reset();
+			}
+			function myFunction() {
+				var x = document.getElementById("msg");
+				setTimeout(function(){ x.style.display = "inline"; }, 3000);
+				document.getElementById("contact_form").reset();
+				form_reset();
+			}
+		</script>
+		Already have account?<a href="Login">&nbsp;Log In</a>
+	</form>
+
+	</div>
+{% endblock %}

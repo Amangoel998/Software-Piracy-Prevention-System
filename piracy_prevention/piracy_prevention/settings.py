@@ -32,7 +32,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    # Core of the authentication framework
     'django.contrib.auth',
+    # Allows permissions to be associated with models you create.
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'piracy_prevention.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['website/templates'],
+        'DIRS': [os.path.join(BASE_DIR,'website/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,9 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'piracy_prevention.wsgi.application'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "website/static"),
-]
 
 
 # Database
@@ -129,4 +128,10 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'piracy_prevention_api.UserProfile'
 
-STATIC_ROOT = '/static'
+# MEDIA_ROOT = '/media'
+
+STATICFILES_DIRS = [
+     os.path.join(BASE_DIR, "static"),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "assets")

@@ -1,26 +1,16 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-	<meta charset="UTF-8">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script>
-		$(document).ready(function(){
-			$(".btn").click(function(){
-				$(".input, .text-area").val(" ");
-			});
-		});
-	</script>
-	<link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet" type="text/css" href="style.css">
-		 <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet'>
-		  <link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans" rel="stylesheet">
-		  <link href="sgnup.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans" rel="stylesheet">
+<link href="styles.css" rel="stylesheet" type="text/css" />
 <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet">
-</head>
-<body>
 
-	<div class="bgimage">
+</head>
+
+<body onload='form_reset()'>
+	<div class="body">
 		<div class="menu">
 			
 			<div class="leftmenu">
@@ -29,46 +19,38 @@
 
 			<div class="rightmenu">
 				<ul>
-					<li><a href="home.html" style="text-decoration:none; color:white;"> HOME </a></li>
-					<li><a href="Aboutus.html" style="text-decoration:none; color:white;">About Us</a></li>
-					<li><a href="Download.html" style="text-decoration:none; color:white;"> Download</a></li>
-					<li><a href="Buy.html" style="text-decoration:none; color:white;"> Buy</a></li>
-					<li id="fisrtlist">Contact Us </li>
-					<li><a href="logn.html" style="text-decoration:none; color:white;">logout</a></li>
+					<li> HOME </li>
+					<li> About Us</li>
+					<li> Download</li>
+					<li>  Buy</li>
+					<li>Contact Us </li>
+					<li id="fisrtlist"> logout</li>
 				</ul>
 			</div>
 
-			<div class="wrapper">
-				<div class="contact-form">
-					<div class="title"> Contact US </div>
-		
-					<div class="input-fields">
-							<div class="items">
-								<label for="name" class="label">name</label>
-								<input id="name" type="text" class="input">
-							</div>
-							<div class="items">
-								<label for="email" class="label">email</label>
-								<input id="email" type="text" class="input">
-							</div>
-							<div class="items">
-								<label for="subject" class="label">subject</label>
-								<input id="subject" type="text" class="input">
-							</div>
-							<div class="items">
-								<label for="msg" class="label">message</label>
-								<textarea id="msg" class="text-area"></textarea>
-							</div>
-					</div>
-						
-					<div class="btn">send</div>
-				</div>
-		</div>	
 		</div>
-
-	
-
-	</div>
-
+		<div class="signup">
+			<form id = "contact_form" >
+				<h2 style="color: #fff;">Contact Us</h2>   
+				<input type="text" placeholder="Email address"><br><br>  
+				<textarea placeholder="Type your message here"></textarea>
+				<input type="submit" value="Send"  onclick="myFunction()"><br><br>
+					<div id="msg" style="display:none">You have successfully submitted!!</div>
+				<script>
+					function form_reset(){
+						document.getElementById("contact_form").reset();
+					}
+					function myFunction() {
+						var x = document.getElementById("msg");
+						setTimeout(function(){ x.style.display = "inline"; }, 3000);
+						document.getElementById("contact_form").reset();
+						form_reset();
+					}
+				</script>
+				Already have account?<a href="logn.html">&nbsp;Log In</a>
+			</form>
+			
+		</div>
+</div>
 </body>
 </html>

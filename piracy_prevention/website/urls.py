@@ -14,6 +14,9 @@ urlpatterns = [
     url(r'Contact', views.contact),
     url(r'About', views.about),
     url(r'Download', views.download),
-]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-print('---------------------------'+str(settings.STATIC_URL)+str(settings.STATIC_ROOT))
+    url(r'Signup', views.signup),
+    url(r'Login', views.login),
+    url(r'Payment', views.payment),
+]  
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

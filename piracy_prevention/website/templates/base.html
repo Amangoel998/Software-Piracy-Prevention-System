@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{ page_name }}</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet">
+    <link href="{% static 'styles.css' %}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="body">
+        <div class="menu">
+            <div class="leftmenu"><ul><li><a href="home"> <h4> Bugpredators </h4> </a></ul></div>
+            <div class="rightmenu">
+                <ul>
+                    <li><a href="home"> Home </a></li>
+					<li><a href="About">About Us</a></li>
+					<li><a href="Download" >Download</a></li>
+					<li><a href="Buy" > Buy</a></li>
+					<li><a href="Contact" >Contact Us</a> </li>
+					<li><a href="Login" >{{ login_value }}</a></li>
+                </ul>
+            </div>
+        </div>
+    {% block content %}
+
+
+    {% endblock %}
+    </div>
+</body>
+</html>

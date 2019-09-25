@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="signup">
+    <form>
+    <h2 style="color: #fff;">Sign Up</h2>
+    <input type="text" name="username" placeholder="First name"><br><br>
+    <input type="text" name="username" placeholder="Last name"><br><br>
+    <input type="password" name="pass" placeholder="Password"><br><br>    
+    <input type="password" name="pass" placeholder="Confirm Password"><br><br>   
+    <input type="text" placeholder="Email address"><br><br>  
+    <input type="submit" value="Sign up" onclick="myFunction()"><br><br>
+        <div id="msg">Congratulations You Sign Up successfully!!</div>
+        <script>
+    function myFunction() {
+        var x = document.getElementById("msg");
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    </script>
+        Already have account?<a href="Login">&nbsp;Log In</a>
+    </form>
+    
+    </div>
+{% endblock %}
