@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from piracy_prevention_api import models
+from . import models
 
 
 class FirstSerializer(serializers.Serializer):
@@ -50,15 +50,68 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user
 
 
-class ProfileFeedSerializer(serializers.ModelSerializer):
-    """Serializes Profile Feed"""
+class ActivationListSerializer(serializers.ModelSerializer):
+    """Serializes Software Profile"""
 
-    # Set this serializer to Profile Feed class
     class Meta:
-        model = models.ProfileFeedItem
-        # id is setup by default in Django
-        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        model = models.ActivationList
+        fields = (
+            'software', 'user', 'authorized_machine', 'activation_date', 'expiration_date', 'activation_hash',
+        )
+        extra_kwargs = {
+            "software": {
+                "required": True,
+                "read_only": False,
+            },
+            "user": {
+                "required": True,
+                "read_only": False,
+            },
+            "authorized_machine": {
+                "required": True,
+                "read_only": False,
+            },
+            "activation_date": {
+                "required": False,
+                "read_only": True,
+            },
+            "expiration_date": {
+                "required": True,
+                "read_only": False,
+            },
+            "activation_hash": {
+                "required": False,
+                "read_only": True,
+            }
 
-        # Now to restrict that if a user creates profile feed and assign to other user
-        # We set user_profile to autheticated user to read only
-        extra_kwargs = {'user_profile':{'read_only':True}}
+        }
+        order_by = 'software'
+
+    def create(self, validated_data):
+        """Create and return a new software Activation"""
+        
+        activation = models.ActivationList.objects.create(
+            user = validated_data['user'],
+            software = validated_data['software'],
+            authorized_machine = validated_data['authorized_machine'],
+            expiration_date = validated_data['expiration_date'],
+        )
+        return activation
+
+class SoftwareProfileSerializer(serializers.ModelSerializer):
+    """Serialize Software Profiles"""
+    class Meta:
+        model = models.SoftwareProfile
+        fields = (
+            'software_name', 'software_organization', 'active_users',
+        )
+        order_by = 'software_organization'
+    
+    def create(self, validated_data):
+        software = models.SoftwareProfile.objects.create(
+            software_name = validated_data['software_name'],
+            software_organization = validated_data['software_organization'],
+        )
+        return software
+    
+

@@ -1,5 +1,8 @@
 from django.conf.urls import url, include
 from django.contrib import admin
+
+# To import in built login system
+from django.contrib.auth.views import LoginView
 from . import views
 
 from django.conf import settings
@@ -15,8 +18,9 @@ urlpatterns = [
     url(r'About', views.about),
     url(r'Download', views.download),
     url(r'Signup', views.signup),
-    url(r'Login', views.login),
+    url(r'^Login', views.login,),
     url(r'Payment', views.payment),
+    url(r'^$', views.home),
 ]  
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

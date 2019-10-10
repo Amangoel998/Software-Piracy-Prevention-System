@@ -6,6 +6,12 @@ from django.contrib.auth.models import AbstractBaseUser #\for custom user model
 from django.contrib.auth.models import PermissionsMixin #/
 from django.contrib.auth.models import BaseUserManager  # for custom model manager
 from django.conf import settings
+from django.utils.timezone import now
+
+import jwt
+import uuid
+from .hashmaker import Key
+from datetime import datetime, timedelta, date
 
 # Classes should be separted by 2 linespace from up and bellow
 class UserProfileManager(BaseUserManager):
@@ -77,22 +83,38 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
         """Retrieve String Representation"""
         return self.email
     
-class ProfileFeedItem(models.Model):
-    """Profile Status Update"""
-    # Add user profile field as foreign key for profile item
-    user_profile = models.ForeignKey(
-        # Can reference name of UserProfile class as string but we have to manually update all keys
-        # When referencing auth user model, it's best to retrive from setting.py
-        settings.AUTH_USER_MODEL,
-        # On delete argument tells what to do if remote field is deleted
-        # So it cascade changes in related fields ie remove feed if user is removed
-        # Other option is to set it None and set feed item as None
-        on_delete = models.CASCADE,
-    )
-    # Status text contain feed update
-    status_text = models.CharField(max_length=255)
-    created_on = models.DateTimeField(auto_now_add = True)
+class SoftwareProfile(models.Model):
+    """Software Item Product"""
+    software_name = models.CharField(max_length=50,unique=True)
+    software_organization = models.CharField(max_length=50)
+    active_users = models.ManyToManyField(UserProfile, through = 'ActivationList')
 
-    def __str__(self):
-        """Return model as String"""
-        return self.status_text
+    def __repr__(self):
+        return self.software_name
+
+class ActivationListManager(models.Manager):
+    """Manage Activations"""
+
+    def create(self, user, software, authorized_machine, expiration_date):
+        activation_request = self.model(
+            user = UserProfile.objects.get(email=user),
+            software = SoftwareProfile.objects.get(software_name=software),
+            authorized_machine = authorized_machine,
+            expiration_date = date.today() + timedelta(days=expiration_date),
+        )
+        activation_request.save(using = self._db)
+        return activation_request
+
+class ActivationList(models.Model):
+    """Model for Activations"""
+    software = models.ForeignKey(SoftwareProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete = models.CASCADE)
+    activation_date = models.DateField(auto_now_add = True, editable=False)
+    expiration_date = models.DateField(auto_now_add = True, editable= True)
+    authorized_machine = models.UUIDField(default=uuid.uuid4, editable=False,)
+    activation_hash = models.CharField(max_length=255,default = Key, primary_key = True)
+
+    objects = ActivationListManager
+
+    def __repr__(self):
+        return self.user+" using "+self.software+" activated on "+self.activation_date

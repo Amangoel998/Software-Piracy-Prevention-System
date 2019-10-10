@@ -25,3 +25,16 @@ class UpdateOwnFeed(permissions.BasePermission):
             return True
         
         return obj.user_profile.id == request.user.id
+
+
+class CreateSoftware(permissions.BasePermission):
+    """Admin can only create software profiles"""
+    pass
+
+class CreateActivation(permissions.BasePermission):
+    """Application can only Activate softwares"""
+    pass
+
+class ViewActivation(permissions.BasePermission):
+    """Only Admin can view Activations"""
+    pass

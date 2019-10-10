@@ -3,7 +3,7 @@
 
 {% block content%}
 	<div class="signup">
-	<form id = "contact_form" >
+	<form id = "contact_form" >{% csrf_token %}
 		<h2>Contact Us</h2>   
 		<input type="text" placeholder="Email address"><br><br>  
 		<textarea placeholder="Type your message here"></textarea>

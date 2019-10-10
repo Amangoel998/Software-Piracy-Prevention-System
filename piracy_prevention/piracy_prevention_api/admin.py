@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from django.contrib import admin
-from piracy_prevention_api import models
+from . import models
 
 admin.site.register(models.UserProfile)
-admin.site.register(models.ProfileFeedItem)
+admin.site.register(models.SoftwareProfile)
+admin.site.register(models.ActivationList)

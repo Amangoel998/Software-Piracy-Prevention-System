@@ -9,7 +9,8 @@ from rest_framework.settings import api_settings
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 
-from piracy_prevention_api import serializers, models, permissions
+from . import serializers, models, permissions
+
 
 
 # Any Request Made to View is assigned to this
@@ -127,7 +128,7 @@ class FirstViewSet(viewsets.ViewSet):
         """Handle Deletng an object with pk"""
         return Response({'http-method':'DELETE'})
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     """Handle creating and managing user profiles"""
 
     # Like regular connect it to serializer class
@@ -157,29 +158,44 @@ class UserLoginApiView(ObtainAuthToken):
     # Get default rendered class from API settings
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
+class SoftwareViewSet(viewsets.ModelViewSet):
+    """Create and edit Software Profiles only by Admin"""
+    serializer_class = serializers.SoftwareProfileSerializer
+    queryset = models.SoftwareProfile.objects.all()
+    permission_classes = (permissions.CreateSoftware,)
 
-class UserProfileFeedApiViewSet(viewsets.ModelViewSet):
-    """CRUD profile feed items"""
-    # We use Token Authentication to authenticate request endpoint
-    authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.ProfileFeedSerializer
-    # Query set that is managed through this viewset
-    queryset = models.ProfileFeedItem.objects.all()
-    permission_classes = (
-        permissions.UpdateOwnFeed,
-        # Allow anonymous user to see feed : IsAuthenticatedOrReadOnly,
-        IsAuthenticated
+class ActivationViewSet(viewsets.ModelViewSet):
+    """View and Edit Activation List"""
+    serializer_class = serializers.ActivationListSerializer
+    queryset = models.ActivationList.objects.all()
+    permission_classes = (permissions.ViewActivation,)
 
-    )
 
-    def perform_create(self, serializer):
-        """Sets user profile to logged in User"""
-        # Called on whenever POST request is made
-        # Perform create is feature of Django allowing to override behaviour
-        # And customize creating objects through model viewset
-        # Every request is passes to serializer class and validated and .save function is called by default
-        # that save content of serializer to database objects And Here we customize this
-        # The user in user field is added whenever a user is authenticated else set to anonymous user
-        serializer.save(user_profile = self.request.user)
 
-        return super().perform_create(serializer)
+
+
+# class UserProfileFeedApiViewSet(viewsets.ModelViewSet):
+#     """CRUD profile feed items"""
+#     # We use Token Authentication to authenticate request endpoint
+#     authentication_classes = (TokenAuthentication,)
+#     serializer_class = serializers.ProfileFeedSerializer
+#     # Query set that is managed through this viewset
+#     queryset = models.ProfileFeedItem.objects.all()
+#     permission_classes = (
+#         permissions.UpdateOwnFeed,
+#         # Allow anonymous user to see feed : IsAuthenticatedOrReadOnly,
+#         IsAuthenticated
+
+#     )
+
+#     def perform_create(self, serializer):
+#         """Sets user profile to logged in User"""
+#         # Called on whenever POST request is made
+#         # Perform create is feature of Django allowing to override behaviour
+#         # And customize creating objects through model viewset
+#         # Every request is passes to serializer class and validated and .save function is called by default
+#         # that save content of serializer to database objects And Here we customize this
+#         # The user in user field is added whenever a user is authenticated else set to anonymous user
+#         serializer.save(user_profile = self.request.user)
+
+#         return super().perform_create(serializer)
