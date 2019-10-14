@@ -20,13 +20,22 @@
 					<li><a href="Download" >Download</a></li>
 					<li><a href="Buy" > Buy</a></li>
 					<li><a href="Contact" >Contact Us</a> </li>
-					<li><a href="Login" >{{ login_value }}</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="/Logout" >Logout</a></li>
+                    {% else %}
+					    <li><a href={{nstate_url}} >{{nstate_value}}</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
+    <div class="greet">
+        {% if user.is_authenticated %}
+            Hi {{ user.name }}!
+        {% else %}
+        <p>You are not logged in</p>
+        {% endif %}
+    </div>
     {% block content %}
-
-
     {% endblock %}
     </div>
 </body>

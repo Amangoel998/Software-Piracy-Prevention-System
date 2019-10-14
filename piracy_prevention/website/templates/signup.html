@@ -2,16 +2,23 @@
 
 {% block content %}
 <div class="signup">
+    {% if message %}
+            <ul>
+                <li>{{ message }}</li>
+            </ul>
+        {% endif %}
+        {{ form.non_field_errors }}
     <form method="POST">{% csrf_token %}
     <h2 style="color: #fff;">Sign Up</h2>
-    <input type="text" name="username" placeholder="First name"><br><br>
-    <input type="text" name="username" placeholder="Last name"><br><br>
-    <input type="text" placeholder="Email address"><br><br>  
-    <input type="password" name="pass" placeholder="Password"><br><br>    
-    <input type="password" name="pass" placeholder="Confirm Password"><br><br>   
+    {{form.as_p}}
+    <br>
+    {% comment %} <input type="text" name="fist_name" placeholder="First name"><br><br>
+    <input type="text" name="last_name" placeholder="Last name"><br><br>
+    <input type="text" name="email" placeholder="Email address"><br><br>  
+    <input type="password" name="pass" placeholder="Password"><br><br> {% endcomment %}
     <input type="submit" value="Sign up" ><br><br>
+        <p style="color:red">{{ message }}</p>
         Already have account?<a href="Login">&nbsp;Log In</a>
     </form>
-    
-    </div>
+</div>
 {% endblock %}

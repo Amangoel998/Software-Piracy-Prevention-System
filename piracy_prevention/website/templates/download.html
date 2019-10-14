@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
-
 {% block content%}
-<h1>Download Page</h1>
+    <form method ="Post">{% csrf_token %}
+        <div class="signup">
+        <h2 style="color:#fff;">Download Software</h2>
+        {{form.as_p}}
+        <br>
+        <p style="color:red">{{message}}</p>
+    {% if user.is_authenticated %}
+        <input type="submit" value="Download Software">
+    {% endif %}
+    </form>
 {% endblock %}

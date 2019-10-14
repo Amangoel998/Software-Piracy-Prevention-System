@@ -26,7 +26,8 @@ class UserProfileManager(BaseUserManager):
         # Normalize the email and make the object
         email = self.normalize_email(email)
         user = self.model(email = email, name = name)
-        
+        user.is_superuser = False
+        user.is_staff = False
         # Django encrypt password using this method
         user.set_password(password)
 
@@ -41,7 +42,6 @@ class UserProfileManager(BaseUserManager):
         
         # This attribute is created by PermissionMixin automatically
         user.is_superuser = True
-
         user.is_staff = True
         user.save(using = self._db)
 
@@ -98,12 +98,14 @@ class ActivationListManager(models.Manager):
     def create(self, user, software, authorized_machine, expiration_date):
         activation_request = self.model(
             user = UserProfile.objects.get(email=user),
-            software = SoftwareProfile.objects.get(software_name=software),
+            software = SoftwareProfile.objects.get(pk=software),
             authorized_machine = authorized_machine,
             expiration_date = date.today() + timedelta(days=expiration_date),
         )
         activation_request.save(using = self._db)
         return activation_request
+    def activate(self, activate=False, machine_code='aaa-bb'):
+        self.model.objects.filter(authorized_machine=machine_code).update(field2='cool')
 
 class ActivationList(models.Model):
     """Model for Activations"""
@@ -113,7 +115,7 @@ class ActivationList(models.Model):
     expiration_date = models.DateField(auto_now_add = True, editable= True)
     authorized_machine = models.UUIDField(default=uuid.uuid4, editable=False,)
     activation_hash = models.CharField(max_length=255,default = Key, primary_key = True)
-
+    is_activated = models.BooleanField(default=False, )
     objects = ActivationListManager
 
     def __repr__(self):

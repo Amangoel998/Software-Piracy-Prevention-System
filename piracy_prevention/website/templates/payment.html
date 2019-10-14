@@ -1,51 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<h4>Cart &nbsp<b>1</b></h4>
-  <p><a href="#">License</a> <span class="price">$15</span></p>
-  <p>Total <b>$15</b></p>
-<hr>
-<table colspan="2" rowspan="1"><tr><th>
-      <form action="home" method ="Post">{% csrf_token %}
-        <div class="signup">
-          <h3>Billing Address</h3>
-            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-            <input type="text" id="fname" name="firstname">
-            <label for="email"><i class="fa fa-envelope"></i> Email</label>
-            <input type="text" id="email" name="email">
-            <label for="hardwareid"><i class="fa fa-address-card-o"></i> Hardware Id</label>
-            <input type="text" id="hardwareid" name="hardwareid">
-            <label for="city"><i class="fa fa-institution"></i> City</label>
-            <input type="text" id="city" name="city">
-            <label for="state">State</label>
-            <input type="text" id="state" name="state">
-            <label for="zip">Zip</label>
-            <input type="text" id="zip" name="zip">
-          </div>
-          </th><th>
-          <div class="signup">
-            <h3>Payment</h3>
-            <label for="fname">Accepted Cards</label>
-            <div class="icon-container">
-              <i class="fa fa-cc-visa" style="color:navy;"></i>
-              <i class="fa fa-cc-amex" style="color:blue;"></i>
-              <i class="fa fa-cc-mastercard" style="color:red;"></i>
-              <i class="fa fa-cc-discover" style="color:orange;"></i>
-            </div>
-            <label for="cname">Name on Card</label>
-            <input type="text" id="cname" name="cardname">
-            <label for="ccnum">Credit card number</label>
-            <input type="text" id="ccnum" name="cardnumber">
-            <label for="expmonth">Expiry Month</label>
-            <input type="text" id="expmonth" name="expmonth" placeholder="MM">
-            <label for="expyear">Expiry Year</label>
-            <input type="text" id="expyear" name="expyear" placeholder="YYYY">
-            <label for="cvv">CVV</label>
-            <input type="text" id="cvv" name="cvv" placeholder="XXX">
-            <label>
-              <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
-            </label>
-            <input type="submit" value="Continue to checkout">
-          </div>
+<form method ="Post">{% csrf_token %}
+  <div class="signup">
+      <h2 style="color:#fff;">Online Payment</h2>
+      {{form.as_p}}
+      <br>
+      <p style="color:red">{{message}}</p>
+      {% if user.is_authenticated %}
+        <input type="submit" value="Buy the Software">
+    {% endif %}
 </form>
-  </th></tr></table>
+    </div>
 {% endblock %}

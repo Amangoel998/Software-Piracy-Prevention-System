@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<h1>Buy Page</h1>
-<a href = "Payment"><button>Proceed to Checkout</button></a>
+    <form method ="Post">{% csrf_token %}
+        <div class="signup">
+        <h2 style="color:#fff;">Billing Details</h2>
+        {{form.as_p}}
+        <br>
+        <p style="color:red">{{message}}</p>
+    {% if user.is_authenticated %}
+        <input type="submit" value="Continue to checkout">
+    {% endif %}
+    </form>
 {% endblock %}

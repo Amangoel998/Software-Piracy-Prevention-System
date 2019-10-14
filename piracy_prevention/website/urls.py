@@ -12,14 +12,15 @@ from django.conf.urls.static import static
 # Which then lookup url pattern that first matches
 # Then it pass all matches api urls to sub-urls in api
 urlpatterns = [
-    url(r'home', views.home),
-    url(r'Buy', views.buy),
-    url(r'Contact', views.contact),
-    url(r'About', views.about),
-    url(r'Download', views.download),
-    url(r'Signup', views.signup),
-    url(r'^Login', views.login,),
-    url(r'Payment', views.payment),
+    url(r'^home', views.home),
+    url(r'^Buy', views.buy),
+    url(r'^Contact', views.contact),
+    url(r'^About', views.about),
+    url(r'^Download', views.download),
+    url(r'^Signup', views.signup),
+    url(r'^Login', views.loggingin,),
+    url(r'^Logout', views.loggingout,),
+    url(r'^Payment', views.payment),
     url(r'^$', views.home),
 ]  
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

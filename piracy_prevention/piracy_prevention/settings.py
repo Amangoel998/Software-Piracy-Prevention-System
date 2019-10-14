@@ -143,5 +143,11 @@ REST_FRAMEWORK = {
     ],
 }
 
-# To redirect user after succesfull login
+# To redirect user after successfull login
 LOGIN_REDIRECT_URL = '/home'
+LOGOUT_REDIRECT_URL = '/home'
+
+AUTHENTICATION_BACKENDS = (
+    'piracy_prevention_api.backends.MyAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    )

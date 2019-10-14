@@ -4,14 +4,17 @@
 <div class="signup">
     <form actions="/api/user-viewset" method="POST">{% csrf_token %}
         <h2 style="color:#fff;">Log In</h2>
-        <input type="text" name="username" placeholder="Username / Email"/><br /><br />
-        <input type="password" name="password" placeholder="Password" /><br /><br />
-        <input type="submit" value="Log In" /></a><br /><br />
-        <div id="container">
-            <a href="contact.html" style=" margin-left:30px; font-size:13px; font-family:Tahoma, Geneva, sans-serif;">Forget password?</a>
-        </div>
-        Don't have account?<a href="Signup">&nbsp;Sign Up</a>
-    
+        {{form.as_p}}
+        <br>
+        {% comment %} <input type="text" name="username" placeholder="Email"/><br /><br />
+        <input type="password" name="password" placeholder="Password" /><br /><br />{% endcomment %}
+        <input type="submit" value="Log In" /></a><br /><br /> 
+        <p style="color:red">{{ message }}</p>
     </form>
+    <div id="container">
+        {% comment %} <a href="Contact" style=" margin-left:30px; font-size:13px; font-family:Tahoma, Geneva, sans-serif;">Forget password?</a> {% endcomment %}
+    </div>
+    Don't have account?<a href="Signup">&nbsp;Sign Up</a>
+    
 </div>
 {% endblock %}

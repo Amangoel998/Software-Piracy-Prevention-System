@@ -2,26 +2,15 @@
 
 
 {% block content%}
+
+{% if user.is_authenticated %}
 	<div class="signup">
-	<form id = "contact_form" >{% csrf_token %}
+	<form id = "contact_form" method="POST">{% csrf_token %}
 		<h2>Contact Us</h2>   
 		<input type="text" placeholder="Email address"><br><br>  
 		<textarea placeholder="Type your message here"></textarea>
-		<input type="submit" value="Send"  onclick="myFunction()"><br><br>
-			<div id="msg" style="display:none">You have successfully submitted!!</div>
-		<script>
-			function form_reset(){
-				document.getElementById("contact_form").reset();
-			}
-			function myFunction() {
-				var x = document.getElementById("msg");
-				setTimeout(function(){ x.style.display = "inline"; }, 3000);
-				document.getElementById("contact_form").reset();
-				form_reset();
-			}
-		</script>
-		Already have account?<a href="Login">&nbsp;Log In</a>
+		<input type="submit" value="Send"><br><br>
 	</form>
-
 	</div>
+    {% endif %}
 {% endblock %}

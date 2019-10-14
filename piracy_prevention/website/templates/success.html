@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content%}
+{% if user.is_authenticated %}
+<div class="success">
+    <form action= '/home'>{% csrf_token %}
+    <h1>You have Bought the software and<br>Now the Software is Activated !!</h1><br><br>
+    <h3>Now copy the activation id into your Application to verify:</h3>
+    <input type="text" style="width:500px;color:yellow;font-size:35px" value={{activation_id}} readonly><br><br>
+    <input type="submit" value="Yes I have copied Code">
+    </form>
+</div>
+{% endif %}
+{% endblock %}

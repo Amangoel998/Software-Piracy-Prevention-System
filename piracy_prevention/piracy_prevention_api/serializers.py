@@ -56,7 +56,7 @@ class ActivationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ActivationList
         fields = (
-            'software', 'user', 'authorized_machine', 'activation_date', 'expiration_date', 'activation_hash',
+            'software', 'user', 'authorized_machine', 'activation_date', 'expiration_date', 'activation_hash','is_activated'
         )
         extra_kwargs = {
             "software": {
@@ -80,6 +80,10 @@ class ActivationListSerializer(serializers.ModelSerializer):
                 "read_only": False,
             },
             "activation_hash": {
+                "required": False,
+                "read_only": True,
+            },
+            "is_activated": {
                 "required": False,
                 "read_only": True,
             }
