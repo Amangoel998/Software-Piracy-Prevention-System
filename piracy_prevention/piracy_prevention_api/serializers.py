@@ -22,7 +22,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         # List of fields in model to be managed by serializer
         # These fields we want to make accessible in API
         # Or to create new models with the serializer
-        fields = ('id', 'name', 'email', 'password')
+        fields = ('id', 'name', 'email', 'password', 'is_activated')
 
         # Dictionary with keys for custom configuration
         extra_kwargs = {
@@ -30,6 +30,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 'write_only' : True ,
                 # To hide it when we enter it
                 'style': {'input_type' : 'password' }
+            },
+            'is_activated':{
+                'read_only': True,
             }
         }
 
@@ -108,6 +111,7 @@ class SoftwareProfileSerializer(serializers.ModelSerializer):
         model = models.SoftwareProfile
         fields = (
             'software_name', 'software_organization', 'active_users',
+            # or simply '_all_'
         )
         order_by = 'software_organization'
     

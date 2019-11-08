@@ -22,8 +22,8 @@ router.register('software-viewset', views.SoftwareViewSet, base_name = 'software
 # Which then lookup url pattern that first matches
 # Then it pass all matches api urls to sub-urls in api
 urlpatterns = [
-    url(r'^first-apiview/',views.FirstApiView.as_view()),
-    url(r'^login/',views.UserLoginApiView.as_view()),
+    url(r'^activation-validation/',views.ValidationAPIView.as_view()),
+    url(r'^user-validation/',views.AuthenticateEndpointUser.as_view()),
     # 'Blank' Coz we dont want to add prefix instead all urls in base of this url
     # This also create additional API Root directory page
     url(r'^', include(router.urls))

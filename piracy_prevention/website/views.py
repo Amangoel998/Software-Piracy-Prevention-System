@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 # from .forms import SignUpForm
 from .forms import *
+from django.http import FileResponse
 
 def loggingin(request):
     '''Login Page'''
@@ -126,7 +127,7 @@ def download(request):
         form = DownloadForm(request.POST)
         if form.is_valid():
             if form.check_user():
-                return redirect('/Buy')
+                return FileResponse(open('static/example.exe','rb'))
             else:
                 message = "Invalid User"
     else:

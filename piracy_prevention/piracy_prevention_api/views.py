@@ -1,81 +1,102 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework import filters
+from rest_framework import status, viewsets, filters
+from rest_framework.settings import api_settings
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.settings import api_settings
+
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
+
+from django.contrib.auth import authenticate
+from django.core import exceptions
 
 from . import serializers, models, permissions
+from .backends import check_Validity
+from datetime import *
+import hashlib
+import uuid
 
-
-
-# Any Request Made to View is assigned to this
-class FirstApiView(APIView):
-    """My First API View"""
-
-    serializer_class = serializers.FirstSerializer
-
-    # GET is used to retrive list of objects on every Request
-    # Request arg is set by rest framework
-    def get(self, request, format = None):
-        apiview = [
-            'Use methods as functions (GET, PUT, POST, PATCH, DELETE)',
-            'Is similar to traditional API',
-            'Gives most control over the Application logic',
-            'Is mapped manually to URLs',
-        ]
-        # Return Response that convert dictionary/list to json
-        return Response({'message' : 'Hello My First API', 'apiview' : apiview})
-    
-    # Create post function to post message with our Name
-    def post(self,request):
-        """Post our name"""
+class ValidationAPIView(APIView):
+    def post(self, request):
+        try:
+            self.requestUser = request.POST['user']
+            self.requestPassword = request.POST['password']
+            self.requestMachine = request.POST['auth_machine']
+            self.requestActivationKey = request.POST['Key']
+            self.requestTimeStamp = datetime.strptime(str(request.POST['TimeStamp']), '%Y-%m-%d %H:%M:%S.%f')
+        except KeyError:
+            pass
+            return Response('Invalid Request')
         
-        # self.serializer_class comes with APIView
-        # That retrieve configured serializer class for our view
-        serializer = self.serializer_class(data = request.data)
+        if self.requestTimeStamp - datetime.now() > timedelta(minutes=5):
+            return Response("TimeStamp Expired")
+        elif True in list( map(lambda x:not x, (
+            self.requestUser,
+            self.requestActivationKey,
+            self.requestMachine,
+            self.requestPassword,
+            self.requestTimeStamp))):
+            return Response("Invalid Request Pattern")
+        try:
+            user = authenticate(
+                email=self.requestUser,
+                password=self.requestPassword,
+                )
+            if user is None:
+                raise Exception("Invalid")
+        except:
+            return Response('Incorret User Credentials')
+        try:
+            _ = uuid.UUID(self.requestMachine)
+            activation = models.ActivationList.objects.get(authorized_machine=self.requestMachine)
+        except:
+            return Response("Requested Machine is not registered")
+        exp_date = datetime.strptime(str(activation.expiration_date), '%Y-%m-%d')
+        if not activation.is_activated or exp_date > datetime.today():
+            return Response("Product Not Activated or Expired")
+        elif str(activation.user)!=self.requestUser:
+            return Response("Activation Not registered to this User")
+        elif str(activation.authorized_machine)!=self.requestMachine:
+            return Response("Invalid Activation Key")
+        # obj = serializers.ActivationListSerializer.data
+        
+        # The user has Activated on his system
+        # try:
+        #     user.update(is_activated = True)
+        # except:
+        #     return Response("Error in models updation")
 
-        # Django serializers provides functionality to validate our input
-        if serializer.is_valid():
+        response_message = self.requestUser + self.requestMachine + self.requestActivationKey + datetime.now().strftime('%M')
+        hashed_message = hashlib.sha256(response_message.encode())
+        return Response(hashed_message.hexdigest())
 
-            # name in argument is same as defined in serialzer.py
-            # We can use other objects too
-            name = serializer.validated_data.get('name')
-
-            # We create a message that we retun from API
-            # It contain message that we got from request
-            message = f'Hello {name}'
-            return Response({'message':message})
-
-        # Return 400 Bad Request in case input is not validated
+class AuthenticateEndpointUser(APIView):
+    def post(self, request):
+        try:
+            self.requestUser = request.POST['user']
+            self.requestPassword = request.POST['password']
+            user = authenticate(
+                email=self.requestUser,
+                password=self.requestPassword,
+                )
+        except:
+            return Response('Incorret User Credentials')
+        if user is not None:
+            if user.is_activated:
+                response_message = 'You were Very Much Authenticated'+datetime.now().strftime('%M')
+                hashed_message = hashlib.sha256(response_message.encode())
+                return Response(hashed_message.hexdigest())
+            else :
+                response_message = 'You are Now Very Much Authenticated'+datetime.now().strftime('%M')
+                hashed_message = hashlib.sha256(response_message.encode())
+                return Response(hashed_message.hexdigest())
         else:
-            return Response(
-                serializer.errors,
-                status = status.HTTP_400_BAD_REQUEST    # Or we can pass 400 as int
-            )
-    
-    # PUT Function
-    # pk is primary key for specific url
-    # Generally put id of object into pk that you are updating
-    def put(self, request, pk = None):
-        """Handle Updating an object"""
+            return Response('Incorret User Credentials')
+        
 
-        # Just to demostrate return the response
-        return Response({'method':'PUT'})
-
-    def patch(self,request, pk = None):
-        """Handle Partial update of an object"""
-
-        # Here we update only the fields provided in request like last name
-        return Response({'method':'PATCH'})
-
-    def delete(self, request, pk = None):
-        """Handle deleting an object"""
-        return Response({'method':'DELETE'})
 
 class FirstViewSet(viewsets.ViewSet):
     """My First API ViewSet"""
@@ -95,7 +116,7 @@ class FirstViewSet(viewsets.ViewSet):
 
         return Response({'message':message, 'a_viewset':a_viewset})
     
-    # 
+    
     def create(self, request):
         """Create new Message"""
 
@@ -114,7 +135,8 @@ class FirstViewSet(viewsets.ViewSet):
     # Retrieve only specific functions for viewset
     def retrieve(self,request,pk=None):
         """Handle getting object by its ID"""
-        return Response({'http-method':'GET'})
+
+        return Response({'http-method':'GET', })
 
     def update(self, request , pk = None):
         """Handle updating whole obejct"""
@@ -151,25 +173,33 @@ class UserViewSet(viewsets.ModelViewSet):
     # Which fields will be searchable by filter
     search_fields = ('name', 'email',)
     
-class UserLoginApiView(ObtainAuthToken):
-    """Handle creating Auth creation Tokens"""
-    # This by default doesn't allow itself to be viewed in browsable djando Admin
-    # Hence we will override this class
-    # Get default rendered class from API settings
-    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+# class UserLoginApiView(ObtainAuthToken):
+#     """Handle creating Auth creation Tokens"""
+#     # This by default doesn't allow itself to be viewed in browsable djando Admin
+#     # Hence we will override this class
+#     # Get default rendered class from API settings
+#     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 class SoftwareViewSet(viewsets.ModelViewSet):
     """Create and edit Software Profiles only by Admin"""
     serializer_class = serializers.SoftwareProfileSerializer
     queryset = models.SoftwareProfile.objects.all()
-    permission_classes = (permissions.CreateSoftware,)
+    # permission_classes = [IsAdminUser]
 
 class ActivationViewSet(viewsets.ModelViewSet):
     """View and Edit Activation List"""
     serializer_class = serializers.ActivationListSerializer
     queryset = models.ActivationList.objects.all()
-    permission_classes = (permissions.ViewActivation,)
+    # permission_classes = [IsAdminUser]
 
+
+
+# def retrieve(self, request):
+#       a = self.get_object()
+#       # Now you retrieve all B related to A
+#       bs = B.objects.filter(A=a)
+#       serializer = B.Serializer(bs, many=True)
+#       return Response(serializer.data)
 
 
 

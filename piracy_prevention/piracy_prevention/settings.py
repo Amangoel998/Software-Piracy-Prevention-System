@@ -24,7 +24,7 @@ SECRET_KEY = 'fa-*k)mfpm1as)-la0l-#$@-e*1*6z489&36awx*&qj+1--gr!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG',1)))
-
+DEBUG = True
 ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['<copied-public-dns-of-machine>', '127.0.0.1']
 
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'piracy_prevention_api',
     'website',
 ]
+
+    # 'sslserver',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,9 +140,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
-    ],
+    ),
+    'DEFAULT_PERMISSION_CLASSES' : (
+        'piracy_prevention_api.permissions.DisableOptionsPermission',
+    ),
+    # 'DEFAULT_PERMISSION_CLASSES' : (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    # 'DEFAULT_RENDERER_CLASSESS':(
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
+    # 'DEFAULT_PARSER_CLASSES':(
+    #     'rest_framework.parsers.JSONParser'
+    # ),
 }
 
 # To redirect user after successfull login
@@ -151,3 +165,7 @@ AUTHENTICATION_BACKENDS = (
     'piracy_prevention_api.backends.MyAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
     )
+
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = 100
+# SECURE_HSTS_PRELOAD = True

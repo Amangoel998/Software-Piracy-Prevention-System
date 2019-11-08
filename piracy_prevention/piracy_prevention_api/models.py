@@ -28,6 +28,7 @@ class UserProfileManager(BaseUserManager):
         user = self.model(email = email, name = name)
         user.is_superuser = False
         user.is_staff = False
+        user.is_activated = False
         # Django encrypt password using this method
         user.set_password(password)
 
@@ -54,7 +55,7 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     # Now we create custom columns on UserProfile table
     email = models.EmailField(max_length = 255, unique = True)
     name = models.CharField(max_length = 255)
-
+    is_activated = models.BooleanField(default=False)
     # Field for Permission System
 
     # To check if user profile is enabled or not 
@@ -110,10 +111,10 @@ class ActivationListManager(models.Manager):
 class ActivationList(models.Model):
     """Model for Activations"""
     software = models.ForeignKey(SoftwareProfile, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserProfile, on_delete = models.CASCADE)
+    user = models.OneToOneField(UserProfile, on_delete = models.CASCADE)
     activation_date = models.DateField(auto_now_add = True, editable=False)
     expiration_date = models.DateField(auto_now_add = True, editable= True)
-    authorized_machine = models.UUIDField(default=uuid.uuid4, editable=False,)
+    authorized_machine = models.UUIDField(null=False, editable=False,unique=True)
     activation_hash = models.CharField(max_length=255,default = Key, primary_key = True)
     is_activated = models.BooleanField(default=False, )
     objects = ActivationListManager

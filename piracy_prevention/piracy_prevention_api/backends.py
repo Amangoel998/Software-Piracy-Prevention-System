@@ -26,3 +26,6 @@ class MyAuthBackend(object):
         except UserProfile.DoesNotExist:
             logging.getLogger("error_logger").error("user with %(user_id)d not found")
             return None
+
+def check_Validity():
+    pass
