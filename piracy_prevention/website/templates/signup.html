@@ -1,24 +1,45 @@
-{% extends 'base.html' %}
+ {% load widget_tweaks %}
 
-{% block content %}
-<div class="signup">
-    {% if message %}
-            <ul>
-                <li>{{ message }}</li>
-            </ul>
-        {% endif %}
-        {{ form.non_field_errors }}
-    <form method="POST">{% csrf_token %}
-    <h2 style="color: #fff;">Sign Up</h2>
-    {{form.as_p}}
-    <br>
-    {% comment %} <input type="text" name="fist_name" placeholder="First name"><br><br>
-    <input type="text" name="last_name" placeholder="Last name"><br><br>
-    <input type="text" name="email" placeholder="Email address"><br><br>  
-    <input type="password" name="pass" placeholder="Password"><br><br> {% endcomment %}
-    <input type="submit" value="Sign up" ><br><br>
-        <p style="color:red">{{ message }}</p>
-        Already have account?<a href="Login">&nbsp;Log In</a>
-    </form>
-</div>
-{% endblock %}
+<div id=cover></div>
+ <div id="signupScreen" class="container">
+    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: -5%;">
+      <div class="col-md-5 wrap-about align-items-stretch d-flex"  style="margin-left: 30%;box-shadow: 3px 3px 3px 3px">
+            <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100 fadeInUp ftco-animated">
+              <h2 class="ftco-consult heading-white mb-4" style="color:white">Signup</h2>
+              <a href="#" class="cancel">×</a>
+              <form class="appointment-form" method="POST">{% csrf_token %}
+                <div class="form-group">
+                  {{ signup_form.first_name|add_class:"form-control"|attr:"placeholder:First Name" }}
+                  {% for error in form.first_name.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  {{ signup_form.last_name|add_class:"form-control"|attr:"placeholder:Last Name" }}
+                  {% for error in form.last_name.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  {{ signup_form.email|add_class:"form-control"|attr:"placeholder:Email Address" }}
+                  {% for error in form.email.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  {{ signup_form.password|add_class:"form-control"|attr:"placeholder:Password" }}
+                  {% for error in form.password.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  <center><p style="color:red">{{message}}</p></center>
+                </div>
+                <div class="form-group">
+                  <input type="submit" name="SigningUp" value="Signup" class="btn btn-secondary py-3 px-4">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>

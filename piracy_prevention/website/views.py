@@ -1,111 +1,73 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
-
+import os
 from django.contrib.auth import authenticate, login, logout
-# from .forms import SignUpForm
 from .forms import *
 from django.http import FileResponse
-
-def loggingin(request):
-    '''Login Page'''
-    message = ''
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            if user:
-                login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
-                return redirect('/home')
-            elif not user:
-                message = 'Invalid User'
-    else:
-        form = LoginForm()
-    return render(request, 'login.html',{
-        'form':form,
-        'page_name':'Login',
-        'nstate_value':'Signup',
-        'nstate_url':'/Signup',
-        'message' : message,
-        })
-def signup(request):
-    '''Signup Page'''
-    message = ''
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # messages.success(request, 'Account Successfully Created')
-            login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
-            return redirect('/home')
-        else:
-            message = "Incorrect"
-    else:
-        form = SignUpForm()
-    return render(request, 'signup.html',{
-        'form':form,
-        'page_name':'Signup',
-        'nstate_value':'Login',
-        'nstate_url':'/Login',
-        'message' : message,
-        })
+from .backends import sendMail
 
 def payment(request):
     '''Payment Page'''
-    if not request.user.is_authenticated:
-        return render(request, 'payment.html',{
-        'message': "You Need to Authenticate to access",
-        'page_name':'Payment Portal',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
-        })
     message = ''
     if request.method == 'POST':
-        form = PaymentForm(request.POST)
-        if form.is_valid():
-            message, activation_id = form.start_activation(request.user, )
+        payment_form = PaymentForm(request.POST)
+        if payment_form.is_valid():
+            message, activation_id = payment_form.start_activation(request.user, )
             if message == 'Success':
-                return render(request, 'success.html',{
-                    'activation_id':activation_id,
-                    'message':message,
-                    'page_name':'Successfully Activated',
-                    'nstate_value':'Login',
-                    'nstate_url':'/Login'
-                    })
+                sendMail(activation_id, request.user.email)
+                return redirect('/home')
     else:
-        form = PaymentForm()
+        payment_form = PaymentForm()
     return render(request, 'payment.html',{
-        'form':form,
+        'payment_form':payment_form,
         'message':message,
         'page_name':'Payment Portal',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
         })
 
 def buy(request):
     '''Buy Page'''
-    if not request.user.is_authenticated:
-        return render(request, 'buy.html',{
-        'message': "You Need to Authenticate to access",
-        'page_name':'Buy Now',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
-        })
     message = ''
+    buy_form = BuyForm()
+    signup_form = SignUpForm()
+    login_form = LoginForm()
     if request.method == 'POST':
-        form = BuyForm(request.POST)
-        if form.is_valid():
-            message = form.create_activation(request.user)
-            if message == 'Success':
-                return redirect('/Payment')
-    else:
-        form = BuyForm()
+        if 'LoggingIn' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Buy')
+                else:
+                    message = 'Invalid User'
+
+        elif "SigningUp" in request.POST:
+            signup_form = SignUpForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Buy')
+                else:
+                    message = 'Invalid Input'
+            else:
+                message = "Incorrect"
+
+        elif "BuyingSoftware" in request.POST:
+            buy_form = BuyForm(request.POST)
+            if buy_form.is_valid():
+                message = buy_form.create_activation(request.user)
+                if message == 'Success':
+                    return redirect('/Payment')
+        else:
+            message = 'Invalid Inputs'
+
     return render(request, 'buy.html',{
-        'form':form,
+        'login_form': login_form,
+        'signup_form': signup_form,
+        'buy_form': buy_form,
         'message':message,
-        'page_name':'But Now',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
+        'page_name':'Buy Now',
         })
    
 def loggingout(request):
@@ -115,43 +77,189 @@ def loggingout(request):
      
 def download(request):
     '''Download Page'''
-    if not request.user.is_authenticated:
-        return render(request, 'download.html',{
-        'message': "You Need to Authenticate to access",
-        'page_name':'Download Now',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
-        })
     message = ''
-    if request.method == 'POST':
-        form = DownloadForm(request.POST)
-        if form.is_valid():
-            if form.check_user():
-                return FileResponse(open('static/example.exe','rb'))
-            else:
-                message = "Invalid User"
+    if request.user.is_authenticated:
+        download_form = DownloadForm()
+        signup_form = None
+        login_form = None
     else:
-        form = DownloadForm()
+        download_form = None
+        signup_form = SignUpForm()
+        login_form = LoginForm()
+    if request.method == 'POST':
+        if 'LoggingIn' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Download')
+                else:
+                    message = 'Invalid User'
+
+        elif "SigningUp" in request.POST:
+            signup_form = SignUpForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Download')
+                else:
+                    message = request.POST #'Invalid Input'
+            else:
+                message = "Incorrect"
+                
+        elif "DownloadingSoftware" in request.POST:
+            download_form = DownloadForm(request.POST)
+            if download_form.is_valid():
+                if download_form.check_user():
+                    strpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/static/example.exe'
+                    return FileResponse(open(strpath,'rb'))
+                else:
+                    message="Invalid User"
+
     return render(request, 'download.html',{
-        'form':form,
-        'message':message,
-        'page_name':'Download Now',
-        'nstate_value':'Login',
-        'nstate_url':'/Login'
-        })
+        'login_form': login_form,
+        'signup_form': signup_form,
+        'download_form': download_form,
+        'message': message,
+        'page_name':'Download Software',
+    })
 
 def home(request):
     '''Home page'''
-    return render(request, 'home.html',{'page_name':'Home','nstate_value':'Login','nstate_url':'/Login'})
+    message = ''
+    signup_form = SignUpForm()
+    login_form = LoginForm()
+    if request.method == 'POST':
+        if 'LoggingIn' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/home')
+                else:
+                    message = 'Invalid User'
+
+        elif "SigningUp" in request.POST:
+            signup_form = SignUpForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/home')
+                else:
+                    message = 'Invalid Input'
+            else:
+                message = "Incorrect"
+
+    return render(request, 'home.html',{
+        'signup_form': signup_form,
+        'login_form': login_form,
+        'page_name':'Home',
+        'message': message
+    })
 
 def contact(request):
     '''Contact Page'''
-    return render(request, 'contact.html',{'page_name':'Contact us','nstate_value':'Login','nstate_url':'/Login'})
+    message = ''
+    signup_form = SignUpForm()
+    login_form = LoginForm()
+    if request.method == 'POST':
+        if 'LoggingIn' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Contact')
+                else:
+                    message = 'Invalid User'
+
+        elif "SigningUp" in request.POST:
+            signup_form = SignUpForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/Contact')
+                else:
+                    message = 'Invalid Input'
+            else:
+                message = "Incorrect"
+        
+        else:
+            return redirect('/home')
+                
+    return render(request, 'contact.html',{
+        'signup_form': signup_form,
+        'login_form': login_form,
+        'page_name':'Contact Us',
+        'message': message
+    })
 
 def about(request):
     '''About Page'''
-    return render(request, 'about.html',{'page_name':'About us','nstate_value':'Login','nstate_url':'/Login'})
+    message = ''
+    signup_form = SignUpForm()
+    login_form = LoginForm()
+    if request.method == 'POST':
+        if 'LoggingIn' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/About')
+                else:
+                    message = 'Invalid User'
 
-def notFound(request):
-    '''Default Page When no other found'''
-    return render(request, 'unathorized.html',{'page_name':'Unauthorized'})
+        elif "SigningUp" in request.POST:
+            signup_form = SignUpForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                if user:
+                    login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                    return redirect('/About')
+                else:
+                    message = 'Invalid Input'
+            else:
+                message = "Incorrect"
+                
+    return render(request, 'about.html',{
+        'signup_form': signup_form,
+        'login_form': login_form,
+        'page_name':'About Our Product',
+        'message': message
+    })
+
+def team(request):
+    '''Team Page'''
+    message = ''
+    if request.method == 'POST':
+        signup_form = SignUpForm(request.POST)
+        if signup_form.is_valid():
+            user = signup_form.save()
+            login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+            return redirect('/Team')
+        else:
+            message = "Incorrect"
+        
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = login_form.get_user()
+            if user:
+                login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
+                return redirect('/Team')
+            elif not user:
+                message = 'Invalid User'
+    else:
+        signup_form = SignUpForm()
+        login_form = LoginForm()
+    return render(request, 'team.html',{
+        'signup_form': signup_form,
+        'login_form': login_form,
+        'page_name':'Professional Team',
+        'message': message
+    })

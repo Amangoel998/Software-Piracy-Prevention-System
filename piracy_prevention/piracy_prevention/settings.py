@@ -23,8 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'fa-*k)mfpm1as)-la0l-#$@-e*1*6z489&36awx*&qj+1--gr!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG',1)))
+#DEBUG = bool(int(os.environ.get('DEBUG',1)))
+
 DEBUG = True
+
 ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['<copied-public-dns-of-machine>', '127.0.0.1']
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'piracy_prevention_api',
     'website',
+    'widget_tweaks',
 ]
 
     # 'sslserver',
@@ -70,8 +73,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #'website.context_processor.add_my_login_form',
             ],
         },
+
     },
 ]
 
@@ -143,9 +148,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
     ),
-    'DEFAULT_PERMISSION_CLASSES' : (
-        'piracy_prevention_api.permissions.DisableOptionsPermission',
-    ),
+    # 'DEFAULT_PERMISSION_CLASSES' : (
+    #     'piracy_prevention_api.permissions.DisableOptionsPermission',
+    # ),
     # 'DEFAULT_PERMISSION_CLASSES' : (
     #     'rest_framework.permissions.IsAuthenticated',
     # ),

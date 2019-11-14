@@ -2,7 +2,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QPlainTextEdit, QMainWindow
+from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QPlainTextEdit, QMainWindow, QDesktopWidget
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.uic import loadUi
 import uuid, socket, requests, hashlib
@@ -21,10 +21,25 @@ class SuccessValidation(QtWidgets.QWidget):
         self.show()
     def setupUI(self, already):
         loadUi('Activation.ui',self)
+        pixmap = QPixmap('chatboxlogo.jpg')
+        self.ActivationWidget.setGeometry(QtCore.QRect(80,0,500, 175))
+        self.ActivationWidget.setPixmap(pixmap)
+        self.setWindowTitle('Successfully Activated')
+        # geometry of the main window
+        qr = self.frameGeometry()
+
+        # center point of screen
+        cp = QDesktopWidget().availableGeometry().center()
+
+        # move rectangle's center point to screen's center point
+        qr.moveCenter(cp)
+
+        # top left of rectangle becomes top left of window centering it
+        self.move(qr.topLeft())
         if already:
-            self.SuccessText.text = "You have already Activated"
+            self.SuccessText.setText("You have already Activated")
         else:
-            self.SuccessText.text = "You have Successfully Activated"
+            self.SuccessText.setText("You have Successfully Activated")
         self.StartApp.clicked.connect(self.startApp)
     def startApp(self):
         self.next = StartApp()
@@ -38,6 +53,18 @@ class StartApp(QtWidgets.QWidget):
         self.show()
     def setupUI(self):
         loadUi('ChatBox.ui',self)
+        self.setWindowTitle('Chat Box')
+        # geometry of the main window
+        qr = self.frameGeometry()
+
+        # center point of screen
+        cp = QDesktopWidget().availableGeometry().center()
+
+        # move rectangle's center point to screen's center point
+        qr.moveCenter(cp)
+
+        # top left of rectangle becomes top left of window centering it
+        self.move(qr.topLeft())
 
 class LicenseValidation(QtWidgets.QWidget):
     def __init__(self):
@@ -46,10 +73,20 @@ class LicenseValidation(QtWidgets.QWidget):
         self.show
 
     def setupUI(self):
-        # pixmap = QPixmap('chatboxlogo.jpg')
-        # self.ActivationWidget.setGeometry(QtCore.QRect(80,0,500, 175))
-        # self.ActivationWidget.setPixmap(pixmap)
+       
         loadUi('License Widget.ui',self)
+        
+        # geometry of the main window
+        qr = self.frameGeometry()
+
+        # center point of screen
+        cp = QDesktopWidget().availableGeometry().center()
+
+        # move rectangle's center point to screen's center point
+        qr.moveCenter(cp)
+
+        # top left of rectangle becomes top left of window centering it
+        self.move(qr.topLeft())
         self.MachineID.setText(str(uuid.UUID(int=uuid.getnode())))
         self.StartApp.setEnabled(False)
         self.setWindowTitle('Licensing Page')
@@ -64,6 +101,7 @@ class LicenseValidation(QtWidgets.QWidget):
         resp = self.complete_validation()
         if resp==1:
             self.StartApp.setEnabled(True)
+            alerting(self, 'Success!',"You have Activated your License")
         else:
             alerting(self, 'Alert!',resp)
             self.close()
@@ -75,7 +113,6 @@ class LicenseValidation(QtWidgets.QWidget):
         
         machm = self.MachineID.text().strip().lstrip().rstrip()
         keym = self.ActivationKey.text().strip().lstrip().rstrip()
-        print(UNAME,PWORD,keym)
 
         myobj = {'user': UNAME, 'password': PWORD,'auth_machine': machm,
             'Key': keym,'TimeStamp': str(datetime.now())}
@@ -104,6 +141,16 @@ class LoginWindow(QtWidgets.QWidget):
     def setupUI(self):
         self.setWindowTitle('Login Page')
         loadUi('Login.ui',self)
+        qr = self.frameGeometry()
+
+        # center point of screen
+        cp = QDesktopWidget().availableGeometry().center()
+
+        # move rectangle's center point to screen's center point
+        qr.moveCenter(cp)
+
+        # top left of rectangle becomes top left of window centering it
+        self.move(qr.topLeft())
         self.Login.clicked.connect(self.checkValidation)
 
     def checkValidation(self):
@@ -129,7 +176,6 @@ class LoginWindow(QtWidgets.QWidget):
     def complete_validation(self):
         url = 'http://127.0.0.1:8000/api/user-validation/'
         myobj = {'user': UNAME, 'password': PWORD}
-        print(UNAME, PWORD)
         try:
             x = requests.post(url, data = myobj)
         except:
@@ -149,7 +195,6 @@ class LoginWindow(QtWidgets.QWidget):
             elif x.text[1:-1]==ans_2:
                 return 2
             i+=1
-        print(x.text[1:-1])
         return x.text[1:-1]
 
 def alerting(self, title, message):

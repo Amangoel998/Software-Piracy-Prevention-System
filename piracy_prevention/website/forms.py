@@ -9,7 +9,7 @@ from django.core import exceptions
 from piracy_prevention_api import models
 from django.contrib.auth import authenticate
 
-import datetime
+from datetime import date, timedelta, datetime
 
 class SignUpForm(forms.Form):
     first_name = forms.CharField(max_length=20, required=True, label='First Name',)
@@ -18,12 +18,15 @@ class SignUpForm(forms.Form):
     password = forms.CharField(max_length=32, required=True, widget=forms.PasswordInput, label='Password')
 
     def save(self, commit=True):
-        user = models.UserProfile.objects.create_user(
-                email = self.cleaned_data['email'],
-                name = self.cleaned_data['first_name']+self.cleaned_data['last_name'],
-                password = self.cleaned_data['password'],
-            )
-        return user
+        try:
+            user = models.UserProfile.objects.create_user(
+                    email = self.cleaned_data['email'],
+                    name = self.cleaned_data['first_name']+self.cleaned_data['last_name'],
+                    password = self.cleaned_data['password'],
+                )
+            return user
+        except:
+            return None
 
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=25, required=True, label='Email address')
@@ -37,15 +40,17 @@ class LoginForm(forms.Form):
             raise forms.ValidationError("Must have these fields")
     
     def get_user(self):
-        user = authenticate(
-            email=self.cleaned_data['email'],
-            password=self.cleaned_data['password'],
-        )
-        return user
+        try:
+            user = authenticate(
+                email=self.cleaned_data['email'],
+                password=self.cleaned_data['password'],
+            )
+            return user
+        except:
+            return None
 
 class BuyForm(forms.Form):
-    full_name = forms.CharField(max_length=20, required=False, label='Full Name',)
-    email = forms.EmailField(max_length=25, required=True, label='Verify Email address')
+    email = forms.EmailField(max_length=25, required=True, label='Verify Email')
     password = forms.CharField(max_length=32, required=True, widget=forms.PasswordInput, label='Verify Password')
     hardware_id = forms.CharField(max_length=40, required=True, label='Hardware ID',)
     address = forms.CharField(max_length=20, required=False, label='Address',)
@@ -70,46 +75,46 @@ class BuyForm(forms.Form):
         except exceptions.ObjectDoesNotExist:
             activation = None
         except exceptions.MultipleObjectsReturned:
-            return "You already purchased"
+            return "You have already purchased"
         except:
             return "Something Invalid"
         if user2==user:
-            try:
-                activation = models.ActivationList.objects.create(
+            if activation==None:
+                try:
+                    activation = models.ActivationList.objects.create(
                     user = user,
                     software = models.SoftwareProfile.objects.get(pk=1),
                     authorized_machine = self.cleaned_data['hardware_id'],
                     expiration_date = int(self.cleaned_data['validity_days']),
                 )
+                except:
+                    return "The Hardware Id is Invalid"
+                activation.expiration_date = date.today()+timedelta(days=int(self.cleaned_data['validity_days']))
+                activation.save()
                 return "Success"
-            except:
-                return "The Hardware Id is Invalid"
+            elif activation.is_activated:
+                return "You have already Purchased"
+            
         elif activation:
             return "You already Purchased the Software"
         else:
             return "Invalid: User Email doesn't Match"
 
 class PaymentForm(forms.Form):
-    holder_name = forms.CharField(max_length=20, required=True, label="Card Holder's Name",)
-    card_number = forms.IntegerField(
-        required=True,
-        label='Card Number',
-        )
+    holder_name = forms.CharField(max_length=20, required=True,)
+    card_number = forms.IntegerField(required=True,max_value=10**12)
     expiry_month = forms.IntegerField(
         max_value=12,
         min_value=1,
         required=True,
-        label='Expiry Month',
-        widget=forms.TextInput(attrs={'placeholder': 'MM'})
         )
     expiry_year = forms.IntegerField(
         max_value=2030,
         min_value=2019,
         required=True,
-        label='Expiry Year',
-        widget=forms.TextInput(attrs={'placeholder': 'YYYY'})
         )
-    cvv = forms.IntegerField(required=True, max_value=999, label='CVV', widget=forms.TextInput(attrs={'placeholder': 'XXX'}))
+
+    cvv = forms.IntegerField(required=True, max_value=999, min_value=100, label='CVV', widget=forms.PasswordInput,)
 
     def start_activation(self,user):
         try:
@@ -120,11 +125,9 @@ class PaymentForm(forms.Form):
             activation = models.ActivationList.objects.filter(
                 user=user
             ).first()
-        models.ActivationList.objects.filter(pk=activation.activation_hash).update(is_activated=True)
-        return ('Success',activation.activation_hash)
+        return ('Success', activation.activation_hash, )
 
 class DownloadForm(forms.Form):
-    full_name = forms.CharField(max_length=20, required=False, label='Full Name',)
     email = forms.EmailField(max_length=25, required=True, label='Verify Email address')
     password = forms.CharField(max_length=32, required=True, widget=forms.PasswordInput, label='Verify Password')
     address = forms.CharField(max_length=20, required=False, label='Address',)
