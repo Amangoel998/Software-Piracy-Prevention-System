@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
+
 {% block active %}
 <li class="nav-item active"><a href="home" class="nav-link">Home</a></li>
 <li class="nav-item"><a href="About" class="nav-link">About</a></li>
@@ -27,7 +29,7 @@
           <div class="row no-gutters slider-text align-items-center justify-content-start" data-scrollax-parent="true">
           <div class="col-md-7 ftco-animate mb-md-5">
             <h1 class="mb-4">We Help to Grow Your Business</h1>
-            <p><a href="#" class="btn btn-primary px-4 py-3 mt-3">Our Services</a></p>
+            <p><a href="About" class="btn btn-primary px-4 py-3 mt-3">Our Services</a></p>
           </div>
         </div>
         </div>
@@ -39,44 +41,44 @@
         <div class="row d-flex no-gutters align-items-stretch consult-wrap">
           <div class="col-md-5 wrap-about align-items-stretch d-flex">
             <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100">
-              <h2 class="heading-white mb-4">Free Consulting</h2>
-              <form action="#" class="appointment-form ftco-animate">
+              <h2 class="heading-white mb-4">Signup Today</h2>
+              <form class="appointment-form" method="POST">{% csrf_token %}
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="First Name">
+                  {{ signup_form.first_name|add_class:"form-control"|attr:"placeholder:First Name" }}
+                  {% for error in form.first_name.errors %}
+                    {{ error }}
+                  {% endfor %}
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Last Name">
+                  {{ signup_form.last_name|add_class:"form-control"|attr:"placeholder:Last Name" }}
+                  {% for error in form.last_name.errors %}
+                    {{ error }}
+                  {% endfor %}
                 </div>
                 <div class="form-group">
-                  <div class="form-field">
-                    <div class="select-wrap">
-                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                      <select name="" id="" class="form-control">
-                        <option value="">Select Guidance</option>
-                        <option value="">Finance</option>
-                        <option value="">Business</option>
-                        <option value="">Auto Loan</option>
-                        <option value="">Real Estate</option>
-                        <option value="">Other Services</option>
-                      </select>
-                    </div>
-                  </div>
+                  {{ signup_form.email|add_class:"form-control"|attr:"placeholder:Email Address" }}
+                  {% for error in form.email.errors %}
+                    {{ error }}
+                  {% endfor %}
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Phone">
+                  {{ signup_form.password|add_class:"form-control"|attr:"placeholder:Password" }}
+                  {% for error in form.password.errors %}
+                    {{ error }}
+                  {% endfor %}
                 </div>
                 <div class="form-group">
-                  <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Message"></textarea>
+                  <center><p style="color:red">{{message}}</p></center>
                 </div>
                 <div class="form-group">
-                  <input type="submit" value="Request A Quote" class="btn btn-secondary py-3 px-4">
+                  <input type="submit" name="SigningUp" value="Signup" class="btn btn-secondary py-3 px-4">
                 </div>
               </form>
             </div>
           </div>
           <div class="col-md-7 wrap-about ftco-animate align-items-stretch d-flex">
             <div class="bg-white p-5">
-              <h2 class="mb-4">Negotiate <br>A Consulting Agency</h2>
+              <h2 class="mb-4">Software Piracy Prevention System</h2>
               <div class="row">
                 <div class="col-lg-6">
                   <div class="services">
