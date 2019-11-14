@@ -32,7 +32,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 'style': {'input_type' : 'password' }
             },
             'is_activated':{
-                'read_only': True,
+                'read_only': False,
             }
         }
 

@@ -17,10 +17,9 @@ urlpatterns = [
     url(r'^Contact', views.contact),
     url(r'^About', views.about),
     url(r'^Download', views.download),
-    url(r'^Signup', views.signup),
-    url(r'^Login', views.loggingin,),
-    url(r'^Logout', views.loggingout,),
+    url(r'^logout', views.loggingout,),
     url(r'^Payment', views.payment),
+    url(r'^Team', views.team),
     url(r'^$', views.home),
 ]  
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block active %}
+<li class="nav-item"><a href="home" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="About" class="nav-link">About</a></li>
+<li class="nav-item active"><a href="Team" class="nav-link">Team</a></li>
+<li class="nav-item"><a href="Buy" class="nav-link">Buy Now</a></li>
+<li class="nav-item"><a href="Download" class="nav-link">Download</a></li>
+<li class="nav-item"><a href="Contact" class="nav-link">Contact</a></li>
+{% endblock %}
+
+{% with page_name='Professional Staff'%}
+
+{% block display %}
+<section class="hero-wrap hero-wrap-2 bg-img-1">
+    <div class="overlay"></div>
+    <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center fadeInUp ftco-animated">
+        <h1 class="mb-2 bread"> {{ page_name }}</h1>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock%}
+
+
+{% block content%}
+<section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated" style="min-width:30%;">
+            <div class="staff border">
+              <div class="img-wrap d-flex align-items-stretch">
+                <div class="img align-self-stretch arsh-bg-0"></div>
+              </div>
+              <div class="text pt-3 px-3 pb-4 text-center">
+                <h3>Arsh Singla</h3>
+                <span class="position mb-2">Software Engineer</span>
+                <div class="faded">
+                  <p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
+                  <ul class="ftco-social text-center">
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-twitter"></span></a></li>
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-facebook"></span></a></li>
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-google-plus"></span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated" style="min-width:30%;">
+            <div class="staff border">
+              <div class="img-wrap d-flex align-items-stretch">
+                <div class="img align-self-stretch aman-bg-1"></div>
+              </div>
+              <div class="text pt-3 px-3 pb-4 text-center">
+                <h3>Aman Goel</h3>
+                <span class="position mb-2">Software Developer</span>
+                <div class="faded">
+                  <p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
+                  <ul class="ftco-social text-center">
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-twitter"></span></a></li>
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-facebook"></span></a></li>
+                    <li class="ftco-animate fadeInUp ftco-animated"><a href="#" class="d-flex align-items-center justify-content-center"><span class="icon-google-plus"></span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+{% endblock %}
+{% endwith %}

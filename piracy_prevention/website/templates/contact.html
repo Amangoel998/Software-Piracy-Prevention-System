@@ -1,16 +1,71 @@
 {% extends 'base.html' %}
+{% block active %}
+<li class="nav-item"><a href="home" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="About" class="nav-link">About</a></li>
+<li class="nav-item"><a href="Team" class="nav-link">Team</a></li>
+<li class="nav-item"><a href="Buy" class="nav-link">Buy Now</a></li>
+<li class="nav-item"><a href="Download" class="nav-link">Download</a></li>
+<li class="nav-item active"><a href="Contact" class="nav-link">Contact</a></li>
+{% endblock %}
+
+{% block display %}
+<section class="hero-wrap hero-wrap-2 bg-img-1">
+    <div class="overlay"></div>
+    <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center fadeInUp ftco-animated">
+        <h1 class="mb-2 bread">{{ page_name }}</h1>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock%}
 
 
 {% block content%}
-
-{% if user.is_authenticated %}
-	<div class="signup">
-	<form id = "contact_form" method="POST">{% csrf_token %}
-		<h2>Contact Us</h2>   
-		<input type="text" placeholder="Email address"><br><br>  
-		<textarea placeholder="Type your message here"></textarea>
-		<input type="submit" value="Send"><br><br>
-	</form>
-	</div>
+    {% if user.is_authenticated %}
+    <section class="ftco-section ftco-consult ftco-no-pt ftco-no-pb bg-img-4" style="margin-top: 3%;margin-bottom:3%; background-position: 50% 143.312px;" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row justify-content-start">
+          <div class="col-md-6 py-5 px-md-5">
+            <div class="py-md-5">
+              <div class="heading-section heading-section-white ftco-animate mb-5 fadeInUp ftco-animated">
+                <h2 class="mb-4">Request A Quote</h2>
+              </div>
+              <form class="appointment-form" method="POST">{% csrf_token %}
+                <div class="d-md-flex">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Email">
+                  </div>
+                  <div class="form-group ml-md-4">
+                    <input type="text" class="form-control" placeholder="Phone">
+                  </div>
+                  
+                </div>
+                <div class="d-md-flex">
+                  <div class="form-group">
+                    <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Message"></textarea>
+                  </div>
+                  <div class="form-group ml-md-4">
+                    <input type="submit" value="Request A Quote" class="btn btn-secondary py-3 px-4">
+                  </div>
+                </div>
+              </form>
+            </div>
+            </div>
+            <div class="col-md-6 py-5 px-md-5 py-md-5">
+            <div class="heading-section heading-section-white ftco-animate mb-5 fadeInUp ftco-animated">
+              <h4 class="mb-4" style="color:white">
+                  Our Executives will contact you as soon as possible
+                </h4>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+	{% else %}
+        <center><h4 style="color:red">You Need to Login to Contact Us</h4></center>
     {% endif %}
 {% endblock %}

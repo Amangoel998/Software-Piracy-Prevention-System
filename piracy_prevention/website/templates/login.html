@@ -1,20 +1,37 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="signup">
-    <form actions="/api/user-viewset" method="POST">{% csrf_token %}
-        <h2 style="color:#fff;">Log In</h2>
-        {{form.as_p}}
-        <br>
-        {% comment %} <input type="text" name="username" placeholder="Email"/><br /><br />
-        <input type="password" name="password" placeholder="Password" /><br /><br />{% endcomment %}
-        <input type="submit" value="Log In" /></a><br /><br /> 
-        <p style="color:red">{{ message }}</p>
-    </form>
-    <div id="container">
-        {% comment %} <a href="Contact" style=" margin-left:30px; font-size:13px; font-family:Tahoma, Geneva, sans-serif;">Forget password?</a> {% endcomment %}
-    </div>
-    Don't have account?<a href="Signup">&nbsp;Sign Up</a>
-    
-</div>
-{% endblock %}
+{% load widget_tweaks %}
+{% include "./signup.html"%}
+<div id="loginScreen" class="container">
+    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: -5%;">
+      <div class="col-md-5 wrap-about align-items-stretch d-flex"  style="margin-left: 30%;box-shadow: 3px 3px 3px 3px">
+            <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100 fadeInUp ftco-animated">
+              <h2 class="ftco-consult heading-white mb-4" style="color:white">Login</h2>
+              <a href="#" class="cancel">×</a>
+              <form class="appointment-form" method="POST">{% csrf_token %}
+                <div class="form-group {% if form.email.errors %} has-error {% endif %}">
+                  {{ login_form.email|add_class:"form-control"|attr:"placeholder:Email Address" }}
+                  {% for error in form.password.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+                  {{ login_form.password|add_class:"form-control"|attr:"placeholder:Password" }}
+                  {% for error in form.password.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  <center><p style="color:red">{{message}}</p></center>
+                </div>
+                <div class="form-group">
+                  <input type="submit" value="Login" name="LoggingIn" class="btn btn-secondary py-3 px-4">
+                </div>
+              </form>
+              <form class="appointment-form" action="#signupScreen">{% csrf_token%}
+                <div class="form-group" >
+                <a href="#signupScreen" data-target="#signup" data-toggle="modal" class="nav-link btn btn-secondary py-3 px-4">Signup</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>

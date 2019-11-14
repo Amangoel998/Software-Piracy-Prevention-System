@@ -1,14 +1,96 @@
 {% extends 'base.html' %}
 
-{% block content%}
-    <form method ="Post">{% csrf_token %}
-        <div class="signup">
-        <h2 style="color:#fff;">Billing Details</h2>
-        {{form.as_p}}
-        <br>
-        <p style="color:red">{{message}}</p>
-    {% if user.is_authenticated %}
-        <input type="submit" value="Continue to checkout">
-    {% endif %}
-    </form>
+{% load widget_tweaks %}
+
+{% block active %}
+<li class="nav-item"><a href="home" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="About" class="nav-link">About</a></li>
+<li class="nav-item"><a href="Team" class="nav-link">Team</a></li>
+<li class="nav-item active"><a href="Buy" class="nav-link">Buy Now</a></li>
+<li class="nav-item"><a href="Download" class="nav-link">Download</a></li>
+<li class="nav-item"><a href="Contact" class="nav-link">Contact</a></li>
 {% endblock %}
+
+{% block display %}
+<section class="hero-wrap hero-wrap-2 bg-img-1">
+    <div class="overlay"></div>
+    <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center fadeInUp ftco-animated">
+        <h1 class="mb-2 bread">{{ page_name }}</h1>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock%}
+
+{% block content%}
+    {% if user.is_authenticated %}
+    <div class="container">
+    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: -5%;">
+      <div class="col-md-5 wrap-about align-items-stretch d-flex"  style="margin-left: 30%;box-shadow: 3px 3px 3px 3px">
+            <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100 fadeInUp ftco-animated">
+              <h2 class="heading-white mb-4" style="color:white">Billing Details</h2>
+              <form method ="Post" class="appointment-form ftco-animate fadeInUp ftco-animated">{% csrf_token %}
+
+              <div class="form-group {% if buy_form.email.errors %} has-error {% endif %}">
+                  {{ buy_form.email|add_class:"form-control"|attr:"placeholder:Verify Email" }}
+                  {% for error in buy_form.email.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group {% if buy_form.password.errors %} has-error {% endif %}">
+                  {{ buy_form.password|add_class:"form-control"|attr:"placeholder:Verify Password" }}
+                  {% for error in buy_form.password.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group {% if buy_form.hardware_id.errors %} has-error {% endif %}">
+                  {{ buy_form.hardware_id|add_class:"form-control"|attr:"placeholder:Hardware Id" }}
+                  {% for error in buy_form.hardware_id.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Address">
+                </div>
+                <div class="form-group">
+                <div class="form-field">
+                  <div class="select-wrap">
+                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                      {{buy_form.validity_days|add_class:"form-control"}}
+                  </div>
+                  {% for error in buy_form.validity_days.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div></div>
+                <div class="form-group">
+                  <center><input type="submit" value="Checkout" name="BuyingSoftware" class="btn btn-secondary py-3 px-4"></center>
+                </div>
+                <div class="form-group">
+                  <center><h5 style="color:red">{{ message }}</h5></center>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    {% else %}
+        <center><h4 style="color:red">"You need to login to Buy"</h4></center>
+    {% endif %}
+
+    <section class="ftco-intro ftco-no-pb img bg-img-1" style="margin-top:5%">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-9 col-md-8 d-flex align-items-center heading-section heading-section-white ftco-animate fadeInUp ftco-animated">
+            <h2 class="mb-3 mb-md-0">You Always Get the Best Guidance</h2>
+          </div>
+          <div class="col-lg-3 col-md-4 ftco-animate fadeInUp ftco-animated">
+            <p class="mb-0"><a href="Contact" class="btn btn-secondary py-3 px-4">Request Quote</a></p>
+          </div>
+        </div>  
+      </div>
+    </section>
+{% endblock %}
+                    
