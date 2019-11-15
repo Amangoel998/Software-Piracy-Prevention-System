@@ -9,7 +9,7 @@
               <form class="appointment-form" method="POST">{% csrf_token %}
                 <div class="form-group {% if form.email.errors %} has-error {% endif %}">
                   {{ login_form.email|add_class:"form-control"|attr:"placeholder:Email Address" }}
-                  {% for error in form.password.errors %}
+                  {% for error in form.email.errors %}
                     {{ error }}
                   {% endfor %}
                 </div>

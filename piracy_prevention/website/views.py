@@ -4,7 +4,7 @@ import os
 from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.http import FileResponse
-from .backends import sendMail
+from .backends import sendActivationMail, sendContactMail
 
 def payment(request):
     '''Payment Page'''
@@ -14,7 +14,7 @@ def payment(request):
         if payment_form.is_valid():
             message, activation_id = payment_form.start_activation(request.user, )
             if message == 'Success':
-                sendMail(activation_id, request.user.email)
+                sendActivationMail(activation_id, request.user.email)
                 return redirect('/home')
     else:
         payment_form = PaymentForm()
@@ -153,6 +153,7 @@ def home(request):
                     message = 'Invalid Input'
             else:
                 message = "Incorrect"
+        
 
     return render(request, 'home.html',{
         'signup_form': signup_form,
@@ -166,6 +167,7 @@ def contact(request):
     message = ''
     signup_form = SignUpForm()
     login_form = LoginForm()
+    contact_form = ContactForm()
     if request.method == 'POST':
         if 'LoggingIn' in request.POST:
             login_form = LoginForm(request.POST)
@@ -189,12 +191,15 @@ def contact(request):
             else:
                 message = "Incorrect"
         
-        else:
+        elif "ContactingAdmin" in request.POST:
+            contact_form = ContactForm(request.POST)
+            sendContactMail(contact_form.message())
             return redirect('/home')
                 
     return render(request, 'contact.html',{
         'signup_form': signup_form,
         'login_form': login_form,
+        'contact_form': contact_form,
         'page_name':'Contact Us',
         'message': message
     })

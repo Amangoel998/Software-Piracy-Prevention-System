@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from base64 import b64decode
 
 
-def sendMail(activation_id, email_recv):
+def sendActivationMail(activation_id, email_recv):
     mail_template = os.path.dirname(os.path.abspath(__file__))
     email_content = open(mail_template+'/templates/email-template.html', 'r').read()
     email_content = email_content.replace('@(ACTIVATION)', activation_id)
@@ -17,6 +17,24 @@ def sendMail(activation_id, email_recv):
 
     msg['From'] = ''
     msg['To'] = email_recv
+    password = str(b64decode(''))[2:-1]
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(email_content)
+
+    s = smtplib.SMTP('smtp.gmail.com: 587')
+    s.starttls()
+
+    s.login( msg['From'], password)
+ 
+    s.sendmail(msg['From'], msg['To'], msg.as_string().encode('utf-8'))
+
+def sendContactMail(message):
+    email_content = message
+    msg = email.message.Message()
+    msg['Subject'] = 'Contact from customer'
+
+    msg['From'] = ''
+    msg['To'] = ''
     password = str(b64decode(''))[2:-1]
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(email_content)
