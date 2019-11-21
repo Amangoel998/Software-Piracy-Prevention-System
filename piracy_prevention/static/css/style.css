@@ -797,8 +797,8 @@ pre {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   max-width: 100%;
-  margin-right: 50px;
-  margin-left: 50px; }
+  /* margin-right: 50px;
+  margin-left: 50px;*/ }
 
 .no-gutters {
   margin-right: 0;
@@ -1381,7 +1381,9 @@ pre {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 50%;
     flex: 0 0 50%;
-    max-width: 50%; }
+    max-width: 60%; 
+    padding-left: 0;
+  }
   .col-lg-7 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 58.33333%;
