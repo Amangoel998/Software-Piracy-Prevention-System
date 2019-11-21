@@ -22,8 +22,8 @@ class SuccessValidation(QtWidgets.QWidget):
     def setupUI(self, already):
         loadUi('Activation.ui',self)
         pixmap = QPixmap('chatboxlogo.jpg')
-        self.ActivationWidget.setGeometry(QtCore.QRect(80,0,500, 175))
-        self.ActivationWidget.setPixmap(pixmap)
+        self.Chatbox.setGeometry(QtCore.QRect(80,0,500, 175))
+        self.Chatbox.setPixmap(pixmap)
         self.setWindowTitle('Successfully Activated')
         # geometry of the main window
         qr = self.frameGeometry()

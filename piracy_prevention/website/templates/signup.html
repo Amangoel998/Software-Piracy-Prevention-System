@@ -1,12 +1,10 @@
  {% load widget_tweaks %}
-
-<div id=cover></div>
- <div id="signupScreen" class="container">
-    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: -5%;">
+ <div id="signupScreen" class="modal">
+    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: 5%;margin-left:10%;width:80%">
       <div class="col-md-5 wrap-about align-items-stretch d-flex"  style="margin-left: 30%;box-shadow: 3px 3px 3px 3px">
             <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100 fadeInUp ftco-animated">
               <h2 class="ftco-consult heading-white mb-4" style="color:white">Signup</h2>
-              <a href="#" class="cancel">×</a>
+             <button onclick="document.getElementById('signupScreen').style.display='none';" class="cancel">×</button>
               <form class="appointment-form" method="POST">{% csrf_token %}
                 <div class="form-group">
                   {{ signup_form.first_name|add_class:"form-control"|attr:"placeholder:First Name" }}
@@ -43,3 +41,14 @@
           </div>
         </div>
       </div>
+      <script>
+// Get the modal
+var modal = document.getElementById('signupScreen');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>

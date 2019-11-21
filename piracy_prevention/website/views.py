@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 import os
 from django.contrib.auth import authenticate, login, logout
@@ -44,12 +45,10 @@ def buy(request):
         elif "SigningUp" in request.POST:
             signup_form = SignUpForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
+                user, message = signup_form.save()
                 if user:
                     login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
                     return redirect('/Buy')
-                else:
-                    message = 'Invalid Input'
             else:
                 message = "Incorrect"
 
@@ -100,12 +99,10 @@ def download(request):
         elif "SigningUp" in request.POST:
             signup_form = SignUpForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
+                user, message = signup_form.save()
                 if user:
                     login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
                     return redirect('/Download')
-                else:
-                    message = request.POST #'Invalid Input'
             else:
                 message = "Incorrect"
                 
@@ -145,12 +142,10 @@ def home(request):
         elif "SigningUp" in request.POST:
             signup_form = SignUpForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
+                user, message = signup_form.save()
                 if user:
                     login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
                     return redirect('/home')
-                else:
-                    message = 'Invalid Input'
             else:
                 message = "Incorrect"
         
@@ -165,12 +160,11 @@ def home(request):
 def contact(request):
     '''Contact Page'''
     message = ''
-    signup_form = SignUpForm()
-    login_form = LoginForm()
-    contact_form = ContactForm()
+    signup_form = SignUpForm(request.POST or None)
+    login_form = LoginForm(request.POST or None)
+    contact_form = ContactForm(request.POST or None)
     if request.method == 'POST':
         if 'LoggingIn' in request.POST:
-            login_form = LoginForm(request.POST)
             if login_form.is_valid():
                 user = login_form.get_user()
                 if user:
@@ -180,21 +174,17 @@ def contact(request):
                     message = 'Invalid User'
 
         elif "SigningUp" in request.POST:
-            signup_form = SignUpForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
+                user, message = signup_form.save()
                 if user:
                     login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
                     return redirect('/Contact')
-                else:
-                    message = 'Invalid Input'
             else:
                 message = "Incorrect"
         
-        elif "ContactingAdmin" in request.POST:
-            contact_form = ContactForm(request.POST)
-            sendContactMail(contact_form.message())
-            return redirect('/home')
+        elif "ContactingAdmin" in request.POST and contact_form.is_valid():
+                sendContactMail(contact_form.sendMessage())
+                return redirect('/home')
                 
     return render(request, 'contact.html',{
         'signup_form': signup_form,
@@ -223,12 +213,10 @@ def about(request):
         elif "SigningUp" in request.POST:
             signup_form = SignUpForm(request.POST)
             if signup_form.is_valid():
-                user = signup_form.save()
+                user, message = signup_form.save()
                 if user:
                     login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
                     return redirect('/About')
-                else:
-                    message = 'Invalid Input'
             else:
                 message = "Incorrect"
                 
@@ -245,11 +233,9 @@ def team(request):
     if request.method == 'POST':
         signup_form = SignUpForm(request.POST)
         if signup_form.is_valid():
-            user = signup_form.save()
+            user, message = signup_form.save()
             login(request, user, backend = 'piracy_prevention_api.backends.MyAuthBackend')
             return redirect('/Team')
-        else:
-            message = "Incorrect"
         
         login_form = LoginForm(request.POST)
         if login_form.is_valid():

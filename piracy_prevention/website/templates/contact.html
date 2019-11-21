@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block active %}
 <li class="nav-item"><a href="home" class="nav-link">Home</a></li>
 <li class="nav-item"><a href="About" class="nav-link">About</a></li>
@@ -34,8 +35,8 @@
               </div>
               <form class="appointment-form" method="POST">{% csrf_token %}
                 <div class="d-md-flex">
-                <div class="form-group {% if form.email.errors %} has-error {% endif %}">
-                  {{ contact_form.name|add_class:"form-control"|attr:"placeholder:You Name" }}
+                <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                  {{ contact_form.name|add_class:"form-control"|attr:"placeholder:Your Name" }}
                   {% for error in contact_form.name.errors %}
                     {{ error }}
                   {% endfor %}
@@ -48,16 +49,16 @@
                 </div>
                 </div>
                 <div class="d-md-flex">
-                <div class="form-group {% if form.email.errors %} has-error {% endif %}">
-                  {{ contact_form.message|add_class:"form-control"|attr:"cols=50;rows=5;placeholder:Hi, I am XXX, I want to contact You." }}
+                <div class="form-group {% if form.message.errors %} has-error {% endif %}">
+                  {{ contact_form.message|add_class:"form-control"|attr:"placeholder:Hi, I am XXX, I want to contact You." }}
                   {% for error in contact_form.message.errors %}
                     {{ error }}
                   {% endfor %}
                 </div>
-                  <div class="form-group ml-md-4">
+                </div>
+                <div class="form-group ml-md-4">
                     <input type="submit" name="ContactingAdmin" value="Request A Quote" class="btn btn-secondary py-3 px-4">
                   </div>
-                </div>
               </form>
             </div>
             </div>

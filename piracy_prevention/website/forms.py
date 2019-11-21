@@ -11,6 +11,9 @@ from django.contrib.auth import authenticate
 
 from datetime import date, timedelta, datetime
 
+
+
+
 class SignUpForm(forms.Form):
     first_name = forms.CharField(max_length=20, required=True, label='First Name',)
     last_name = forms.CharField(max_length=20, required=True, label='Last Name')
@@ -19,14 +22,17 @@ class SignUpForm(forms.Form):
 
     def save(self, commit=True):
         try:
-            user = models.UserProfile.objects.create_user(
-                    email = self.cleaned_data['email'],
-                    name = self.cleaned_data['first_name']+self.cleaned_data['last_name'],
-                    password = self.cleaned_data['password'],
-                )
-            return user
-        except:
-            return None
+            if self.is_valid():
+                user = models.UserProfile.objects.create_user(
+                        email = self.cleaned_data['email'],
+                        name = self.cleaned_data['first_name']+self.cleaned_data['last_name'],
+                        password = self.cleaned_data['password'],
+                    )
+                return (user, 'Success')
+            else:
+                return (None, '')
+        except Exception as error:
+            return (None, 'User Already exist, Try Login')
 
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=25, required=True, label='Email address')
@@ -128,9 +134,9 @@ class PaymentForm(forms.Form):
         return ('Success', activation.activation_hash, )
 
 class DownloadForm(forms.Form):
-    email = forms.EmailField(max_length=25, required=True, label='Verify Email address')
-    password = forms.CharField(max_length=32, required=True, widget=forms.PasswordInput, label='Verify Password')
-    address = forms.CharField(max_length=20, required=False, label='Address',)
+    email = forms.EmailField(max_length=25, required=True)
+    password = forms.CharField(max_length=32, required=True, widget=forms.PasswordInput)
+    address = forms.CharField(max_length=20, required=False)
     
     def check_user(self):
         user = authenticate(
@@ -144,12 +150,14 @@ class DownloadForm(forms.Form):
 
 
 class ContactForm(forms.Form):
-    name = forms.CharField(max_length=20, required=True, label='Name',)
+    name = forms.CharField(max_length=20, required=True)
     email = forms.EmailField(max_length=25, required=True)
-    message = forms.CharField(max_length=20, required=False, label='Address',)
+    message = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 3}))
     
-    def message(self):
-        email = self.cleaned_data['email'],
+    def sendMessage(self):
+        if not self.is_valid():
+            return None
+        email = self.cleaned_data['email']
         name = self.cleaned_data['name']
         message = self.cleaned_data['message']
         return """

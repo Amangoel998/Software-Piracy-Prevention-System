@@ -1,11 +1,11 @@
 {% load widget_tweaks %}
 {% include "./signup.html"%}
-<div id="loginScreen" class="container">
-    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: -5%;">
+<div id="loginScreen" class="modal">
+    <div class="row d-flex no-gutters align-items-stretch consult-wrap"  style="margin-top: 5%;margin-left:10%;width:80%">
       <div class="col-md-5 wrap-about align-items-stretch d-flex"  style="margin-left: 30%;box-shadow: 3px 3px 3px 3px">
             <div class="ftco-animate bg-primary align-self-stretch px-4 py-5 w-100 fadeInUp ftco-animated">
               <h2 class="ftco-consult heading-white mb-4" style="color:white">Login</h2>
-              <a href="#" class="cancel">×</a>
+              <button onclick="document.getElementById('loginScreen').style.display='none';" class="cancel">×</button>
               <form class="appointment-form" method="POST">{% csrf_token %}
                 <div class="form-group {% if form.email.errors %} has-error {% endif %}">
                   {{ login_form.email|add_class:"form-control"|attr:"placeholder:Email Address" }}
@@ -26,12 +26,18 @@
                   <input type="submit" value="Login" name="LoggingIn" class="btn btn-secondary py-3 px-4">
                 </div>
               </form>
-              <form class="appointment-form" action="#signupScreen">{% csrf_token%}
-                <div class="form-group" >
-                <a href="#signupScreen" data-target="#signup" data-toggle="modal" class="nav-link btn btn-secondary py-3 px-4">Signup</a>
+              <div class="appointment-form form-group" >
+                <button onclick="gotoSignup()" style="width:100%" class="nav-link btn btn-secondary py-3 px-4">
+                Signup</button>
                 </div>
-              </form>
             </div>
           </div>
-        </div>
       </div>
+      </div>
+      <script>
+// Get the modal
+function gotoSignup(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('signupScreen').style.display='block';
+}
+</script>
