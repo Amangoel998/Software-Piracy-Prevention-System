@@ -16,8 +16,8 @@
   <widget class="QLabel" name="MachID">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>88</y>
+     <x>110</x>
+     <y>98</y>
      <width>111</width>
      <height>31</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QLabel" name="EnterKey">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>138</y>
+     <x>110</x>
+     <y>148</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -42,8 +42,8 @@
   <widget class="QLineEdit" name="MachineID">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>88</y>
+     <x>260</x>
+     <y>98</y>
      <width>231</width>
      <height>31</height>
     </rect>
@@ -52,8 +52,8 @@
   <widget class="QLineEdit" name="ActivationKey">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>138</y>
+     <x>260</x>
+     <y>148</y>
      <width>231</width>
      <height>31</height>
     </rect>
@@ -68,8 +68,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>228</y>
+     <x>230</x>
+     <y>238</y>
      <width>131</width>
      <height>33</height>
     </rect>
@@ -121,8 +121,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>310</y>
+     <x>450</x>
+     <y>320</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -196,6 +196,33 @@
    </property>
    <property name="text">
     <string>Proceed</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>301</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Bitstream Charter</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Enter Activation Code</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
  </widget>
